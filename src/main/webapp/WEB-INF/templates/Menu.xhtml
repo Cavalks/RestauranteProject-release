@@ -1,22 +1,32 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
-	
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
 	<nav class="aw-menu">
 		<ul>
-			<li>
-				<h:link><i class="fa  fa-fw  fa-home"></i>Dashboard</h:link>
-			</li>
-			<li class="is-selected">
-				<h:link><i class="fa  fa-fw  fa-user"></i>Página 1</h:link>
-			</li>
-			<li>
-				<h:link><i class="fa  fa-fw  fa-file-text"></i>Página 2</h:link>
-			</li>
-			<li>
-				<h:link><i class="fa  fa-fw  fa-cog"></i>Página 3</h:link>
-			</li>
+			<li class="is-selected"><h:link>
+					<i class="fa  fa-fw  fa-home"></i>
+					
+					
+					
+					Início</h:link></li>
+			<li><h:link>
+					<i class="fa  fa-fw fa-cart-plus" />Vendas</h:link></li>
+			<li><h:link>
+					<i class="fa  fa-fw  fa-file-pdf-o"></i>Relatórios</h:link></li>
+			<li><h:link>
+					<i class="fa  fa-fw  fa-bar-chart-o"></i>Gráficos</h:link></li>
+			<li><h:link>
+					<i class="fa  fa-fw  fa-calendar"></i>Pedidos</h:link></li>
+			<li><h:link>
+					<i class="fa  fa-fw  fa-power-off"></i>Sair</h:link></li>
+
+
+
 		</ul>
+
+
 	</nav>
-	
+
 </ui:composition>
