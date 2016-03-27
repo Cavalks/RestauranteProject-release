@@ -28,13 +28,17 @@ public class CondicoesVenda implements Serializable {
 		this.etapa2 = false;
 		this.etapa3 = false;
 		this.etapa4 = false;
+		
 		if (etapaSelecionada == 1) {
 			this.etapa1 = true;
 			this.index = 0;
 		} else if (etapaSelecionada == 2) {
+			this.returnPagamento = 0;
 			this.etapa2 = true;
 			this.index = 1;
 		} else if (etapaSelecionada == 3) {
+			this.cartao = false;
+			this.dinheiro = false;
 			this.etapa3 = true;
 			this.index = 2;
 		} else if (etapaSelecionada == 4) {

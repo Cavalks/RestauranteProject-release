@@ -46,8 +46,8 @@
 			<br />
 
 
-			<p:steps activeIndex="#{vendasBean.condicoesVenda.index}" styleClass="custom"
-				readonly="true">
+			<p:steps activeIndex="#{vendasBean.condicoesVenda.index}"
+				styleClass="custom" readonly="true">
 				<p:menuitem value="Escolha os Produtos" url="#" />
 				<p:menuitem value="Confirme o pedido" url="#" />
 				<p:menuitem value="Selecione forma de pagamento" url="#" />
@@ -94,7 +94,7 @@
 			<p:panel rendered="#{vendasBean.condicoesVenda.etapa2 == true}">
 
 
-				<h1>Etapa II</h1>
+				
 				<p:dataTable var="p" value="#{vendasBean.produtosSelecionados}">
 
 					<p:column headerText="Produto">
@@ -134,31 +134,34 @@
 			</p:panel>
 
 			<p:panel rendered="#{vendasBean.condicoesVenda.etapa3 == true}">
-
+				<h1>Valor total do pedido : #{vendasBean.pedidoTotal} </h1>
+				<br />
 				<p:outputLabel value="Forma de Pagamento" />
 				<br />
-				<p:selectOneRadio value="#{vendasBean.condicoesVenda.returnPagamento}">
+				<p:selectOneRadio
+					value="#{vendasBean.condicoesVenda.returnPagamento}">
 					<f:selectItem itemLabel="Cartão" itemValue="1" />
 					<f:selectItem itemLabel="Dinheiro" itemValue="2" />
-					<p:ajax event="click" listener="#{vendasBean.condicoesVenda.actionPagamentoAjax}"
+					<p:ajax event="click"
+						listener="#{vendasBean.condicoesVenda.actionPagamentoAjax}"
 						update="@form" />
 				</p:selectOneRadio>
-				<p:panelGrid columns="2" rendered="#{vendasBean.condicoesVenda.dinheiro}"
-					id="panelDinheiro">
+				<p:panelGrid columns="2"
+					rendered="#{vendasBean.condicoesVenda.dinheiro}" id="panelDinheiro">
 					<p:outputLabel value="Dinheiro Recebido" />
 					<h:inputText value="#{vendasBean.dinheiroRecebido}" required="true"
 						requiredMessage="é necessário informar o dinheiro recebido" />
 				</p:panelGrid>
-				<p:panelGrid columns="2" rendered="#{vendasBean.condicoesVenda.cartao}"
-					id="panelCartao">
+				<p:panelGrid columns="2"
+					rendered="#{vendasBean.condicoesVenda.cartao}" id="panelCartao">
 					<p:outputLabel value="Código da operação" />
 					<h:inputText required="true"
 						requiredMessage="é necessário informar o codigo da operação." />
 				</p:panelGrid>
 				<br />
-				<p:commandButton update="@form" value="voltar"
+				<p:commandButton process="@this" update="@form" value="voltar"
 					rendered="#{vendasBean.condicoesVenda.dinheiro || vendasBean.condicoesVenda.cartao}"
-					action="#{vendasBean.etapa3}" />
+					action="#{vendasBean.etapa2}" />
 				<p:commandButton update="@form" value="próximo"
 					action="#{vendasBean.etapa4}"
 					rendered="#{vendasBean.condicoesVenda.dinheiro || vendasBean.condicoesVenda.cartao}" />
@@ -168,7 +171,8 @@
 
 				<h1>Pedido realizado com sucesso !</h1>
 				<br />
-				<p:outputLabel value="Troco : " rendered="#{vendasBean.condicoesVenda.dinheiro}" />
+				<p:outputLabel value="Troco :  #{vendasBean.troco}"
+					rendered="#{vendasBean.condicoesVenda.dinheiro}" />
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Número do pedido " />
 					<p:outputLabel value="#{vendasBean.pedido.id}" />
@@ -176,10 +180,11 @@
 					<p:outputLabel value="#{vendasBean.pedido.valorTotal}" />
 					<p:outputLabel value="Funcionário(a)  :  " />
 					<p:outputLabel value="#{vendasBean.pedido.vendedor.nome}" />
-			</p:panelGrid>
-			<br />
-			<p:commandButton value="Inicio" />
-			<p:commandButton value="Novo Pedido" action="#{vendasBean.novoPedido}" update="@form"/>
+				</p:panelGrid>
+				<br />
+				<p:commandButton value="Inicio" />
+				<p:commandButton value="Novo Pedido"
+					action="#{vendasBean.novoPedido}" update="@form" />
 
 
 

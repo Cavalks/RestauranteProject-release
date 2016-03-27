@@ -29,7 +29,7 @@ public class VendasBean implements Serializable {
 	private PedidoDAO pedidoDao;
 	private List<ProdutoAux> produtos;
 	private List<ProdutoAux> produtosSelecionados = new ArrayList<>();
-
+	private Double troco;
 	private Pedido pedido = new Pedido();
 
 	private Double dinheiroRecebido;
@@ -70,16 +70,17 @@ public class VendasBean implements Serializable {
 	}
 
 	public String etapa3() {
-        
+
 		this.condicoesVenda.selecionarEtapa(3, pedido);
 		return null;
 	}
 
 	public String etapa4() {
-
-		this.condicoesVenda.selecionarEtapa(4, pedido);
-		this.pedidoDao.popularPedido(produtosSelecionados, pedido);
-		this.pedido = this.pedidoDao.guardar(pedido);
+		if (troco()) {
+			this.condicoesVenda.selecionarEtapa(4, pedido);
+			this.pedidoDao.popularPedido(produtosSelecionados, pedido);
+			this.pedido = this.pedidoDao.guardar(pedido);
+		}
 
 		return null;
 	}
@@ -149,5 +150,21 @@ public class VendasBean implements Serializable {
 	public void setProdutosSelecionados(List<ProdutoAux> produtosSelecionados) {
 		this.produtosSelecionados = produtosSelecionados;
 	}
+
+	public boolean troco() {
+		
+		if (dinheiroRecebido >=getPedidoTotal()) {
+			troco = dinheiroRecebido - getPedidoTotal();
+			return true;
+		} else {
+			FacesUtil.addErrorMessage("Dinheiro insuficiente");
+			return false;
+		}
+	}
+
+	public Double getTroco() {
+		return troco;
+	}
+	
 
 }
