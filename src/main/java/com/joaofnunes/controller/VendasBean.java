@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,7 +15,7 @@ import com.joaofnunes.model.Pedido;
 import com.joaofnunes.model.ProdutoAux;
 import com.joaofnunes.util.jsf.FacesUtil;
 
-@ApplicationScoped
+@ViewScoped
 @Named
 public class VendasBean implements Serializable {
 
@@ -152,8 +152,8 @@ public class VendasBean implements Serializable {
 	}
 
 	public boolean troco() {
-		
-		if (dinheiroRecebido >=getPedidoTotal()) {
+
+		if (dinheiroRecebido >= getPedidoTotal()) {
 			troco = dinheiroRecebido - getPedidoTotal();
 			return true;
 		} else {
@@ -165,6 +165,5 @@ public class VendasBean implements Serializable {
 	public Double getTroco() {
 		return troco;
 	}
-	
 
 }
