@@ -10,6 +10,14 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import com.joaofnunes.filter.PedidoFilter;
 import com.joaofnunes.model.Funcionario;
 import com.joaofnunes.model.ItemPedido;
 import com.joaofnunes.model.Pedido;
@@ -41,6 +49,59 @@ public class PedidoDAO implements Serializable {
 		} catch (PersistenceException e) {
 			// throw new NegocioException("Produto não pode ser excluído.");
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Pedido> filtrados(PedidoFilter filtro) {
+		Session session = this.manager.unwrap(Session.class);
+
+		Criteria criteria = session.createCriteria(Pedido.class)
+
+				// fazemos uma associação (join) com vendedor e nomeamos como
+				// "v"
+				.createAlias("vendedor", "v");
+
+		if (filtro.getIdInicial() != null) {
+			// id deve ser maior ou igual (ge = greater or equals) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.ge("id", filtro.getIdInicial()));
+		}
+
+		if (filtro.getIdFinal() != null) {
+			// id deve ser menor ou igual (le = lower or equal) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.le("id", filtro.getIdFinal()));
+		}
+
+		if (filtro.getDateInicial() != null) {
+			criteria.add(Restrictions.ge("dataCriacao", filtro.getDateInicial()));
+		}
+
+		if (filtro.getDateFinal() != null) {
+			criteria.add(Restrictions.le("dataCriacao", filtro.getDateFinal()));
+		}
+
+		if (filtro.getValorInicial() != null) {
+			// id deve ser maior ou igual (ge = greater or equals) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.ge("valorTotal", filtro.getValorInicial()));
+		}
+
+		if (filtro.getValorFinal() != null) {
+			// id deve ser menor ou igual (le = lower or equal) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.le("valorTotal", filtro.getValorFinal()));
+		}
+
+		if (StringUtils.isNotBlank(filtro.getFuncionario())) {
+			// acessamos o nome do vendedor associado ao pedido pelo alias
+			// "v",
+			// criado anteriormente
+			criteria.add(Restrictions.ilike("v.nome", filtro.getFuncionario(), MatchMode.ANYWHERE));
+
+		}
+
+		return criteria.addOrder(Order.asc("id")).list();
 	}
 
 	public Pedido porId(Long id) {
@@ -77,7 +138,7 @@ public class PedidoDAO implements Serializable {
 		System.out.println(funcionario.getNome());
 		p.setVendedor(funcionario);
 		p.setDataCriacao(new Date());
-		//p.setFormaPagamento(FormaPagamento.DINHEIRO);
+		// p.setFormaPagamento(FormaPagamento.DINHEIRO);
 		return p;
 	}
 

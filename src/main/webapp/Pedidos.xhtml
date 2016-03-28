@@ -6,12 +6,90 @@
 	template="/WEB-INF/templates/Layout.xhtml">
 
 	<ui:define name="content">
-		<h1 class="aw-page-title">Emissão de Pedido</h1>
+		<h1 class="aw-page-title">Pesquisar Pedidos</h1>
 
 
-		<h:form id="frm">
+		<h:form>
+
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" update="@form"
+						action="#{pedidosBean.pesquisarFiltrados}" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+				<p:outputLabel value="Número" />
+				<h:panelGroup>
+					<p:inputText size="10"
+						value="#{pedidosBean.pedidoFilter.idInicial}" />
+	    			a
+	    			<p:inputText size="10"
+						value="#{pedidosBean.pedidoFilter.idFinal}" />
+				</h:panelGroup>
+
+				<p:outputLabel value="Data de criação" />
+				<h:panelGroup>
+					<p:calendar size="10" pattern="dd/MM/yyyy"
+						value="#{pedidosBean.pedidoFilter.dateInicial}" />
+	    			a
+	    			<p:calendar size="10" pattern="dd/MM/yyyy"
+						value="#{pedidosBean.pedidoFilter.dateFinal}" />
+				</h:panelGroup>
+
+				<p:outputLabel value="Funcionário " />
+				<p:autoComplete value="#{pedidosBean.pedidoFilter.funcionario}"
+					completeMethod="#{pedidosBean.lista}" var="f" itemLabel="#{f}"
+					itemValue="#{f}" />
+
+				<p:outputLabel value="Valor Total Pedido" />
+				<h:panelGroup>
+					<p:inputText size="10"
+						value="#{pedidosBean.pedidoFilter.valorInicial}" />
+	    			a
+	    			<p:inputText size="10"
+						value="#{pedidosBean.pedidoFilter.valorFinal}" />
+				</h:panelGroup>
+
+			</p:panelGrid>
+
+
+
+			<p:dataTable style="margin-top: 20px"
+				value="#{pedidosBean.filtrados}" var="p"
+				emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				lazy="true">
+				<p:column headerText="Número">
+					<h:outputText value="#{p.id}" />
+				</p:column>
+
+				<p:column headerText="Funcionário">
+					<h:outputText value="#{p.vendedor.nome}" />
+				</p:column>
+				<p:column headerText="Data de criação">
+					<h:outputText value="#{p.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor total">
+					<h:outputText value="#{p.valorTotal}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Utilidade">
+					<p:commandButton value="Excluir" />
+					<p:commandButton value="Editar" />
+
+				</p:column>
+			</p:dataTable>
 
 		</h:form>
+
 	</ui:define>
 
 </ui:composition>
