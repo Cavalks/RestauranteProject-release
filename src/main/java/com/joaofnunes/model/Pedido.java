@@ -37,6 +37,8 @@ public class Pedido implements Serializable {
 	private FormaPagamento formaPagamento;
 	private Funcionario vendedor;
 
+	private boolean edicao = false;
+
 	private List<ItemPedido> itens = new ArrayList<>();
 
 	@Id
@@ -135,7 +137,19 @@ public class Pedido implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
+	@Transient
+	public boolean isEdicao() {
+		return edicao;
+	}
+
+	public void setEdicao(boolean edicao) {
+		this.edicao = edicao;
+	}
+
+	@Transient
+	public boolean isnEdicao() {
+		return !isEdicao();
+	}
 
 }

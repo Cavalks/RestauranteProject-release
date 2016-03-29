@@ -6,10 +6,10 @@
 	template="/WEB-INF/templates/Layout.xhtml">
 
 	<ui:define name="content">
-		<h1 class="aw-page-title">Pesquisar Pedidos</h1>
+		<h1 class="aw-page-title">Pesquisa de pedidos</h1>
 
 
-		<h:form>
+		<h:form id="form">
 
 
 			<p:toolbar style="margin-top: 20px">
@@ -58,7 +58,7 @@
 
 
 
-			<p:dataTable style="margin-top: 20px"
+			<p:dataTable style="margin-top: 20px" id="tablePedido"
 				value="#{pedidosBean.filtrados}" var="p"
 				emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
 				paginatorAlwaysVisible="false" paginatorPosition="bottom"
@@ -82,11 +82,40 @@
 				</p:column>
 
 				<p:column headerText="Utilidade">
-					<p:commandButton value="Excluir" />
-					<p:commandButton value="Editar" />
-
+					<p:commandButton value="Excluir"
+						oncomplete="PF('DialogExclusao').show()" process="@this"
+						update="@form">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{pedidosBean.pedidoSelecionado}" />
+					</p:commandButton>
+					<p:button value="Editar" outcome="/Venda.xhtml">
+						<f:param name="pedido" value="#{p.id}" />
+					</p:button>
 				</p:column>
 			</p:dataTable>
+
+			<p:dialog widgetVar="DialogExclusao"
+				header="Tem certeza que deseja excluir?" resizable="true"
+				style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel">
+
+
+					<p:commandButton value="Cancelar" />
+					<p:commandButton value="Confirmar"
+						oncomplete="if (!args.validationFailed) PF('DialogExclusao').hide()"
+						process="itemPanel" update="form:tablePedido"
+						action="#{pedidosBean.excluir}">
+
+
+					</p:commandButton>
+				</h:panelGroup>
+
+
+			</p:dialog>
+
+
+
+
 
 		</h:form>
 

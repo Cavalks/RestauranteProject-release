@@ -27,18 +27,27 @@ public class VendasBean implements Serializable {
 	private ProdutoDAO produtoDao;
 	@Inject
 	private PedidoDAO pedidoDao;
-	private List<ProdutoAux> produtos;
+	private List<ProdutoAux> produtos = new ArrayList<>();
 	private List<ProdutoAux> produtosSelecionados = new ArrayList<>();
 	private Double troco;
 	private Pedido pedido = new Pedido();
-
+	private Pedido pedidoEditavel;
 	private Double dinheiroRecebido;
+	private boolean edicao = false;
 	private CondicoesVenda condicoesVenda = new CondicoesVenda();
 
 	public void preRender(ComponentSystemEvent e) {
+
 		if (FacesUtil.isNotPostback()) {
+			if (pedidoEditavel != null) {
+				carregarPedidoEditavel();
+			}
+
 			etapa1();
-			this.produtos = this.produtoDao.carregarProdutos();
+			if (edicao == false) {
+				this.produtos = this.produtoDao.carregarProdutos();
+
+			}
 
 		}
 
@@ -78,7 +87,7 @@ public class VendasBean implements Serializable {
 	public String etapa4() {
 		if (troco()) {
 			this.condicoesVenda.selecionarEtapa(4, pedido);
-			this.pedidoDao.popularPedido(produtosSelecionados, pedido);
+			this.pedidoDao.popularPedido(produtosSelecionados, pedido, pedidoEditavel);
 			this.pedido = this.pedidoDao.guardar(pedido);
 		}
 
@@ -90,6 +99,10 @@ public class VendasBean implements Serializable {
 		this.condicoesVenda = new CondicoesVenda();
 		this.pedido = new Pedido();
 		zerarListas();
+		this.edicao = false;
+		this.dinheiroRecebido = new Double(0);
+		this.pedidoEditavel = null;
+
 		return null;
 	}
 
@@ -106,7 +119,7 @@ public class VendasBean implements Serializable {
 	public Double getPedidoTotal() {
 		Double valor = new Double(0);
 		for (ProdutoAux produtoAux : produtosSelecionados) {
-			valor = produtoAux.getValorTotal();
+			valor += produtoAux.getValorTotal();
 		}
 		return valor;
 	}
@@ -164,6 +177,27 @@ public class VendasBean implements Serializable {
 
 	public Double getTroco() {
 		return troco;
+	}
+
+	public Pedido getPedidoEditavel() {
+		return pedidoEditavel;
+	}
+
+	public void setPedidoEditavel(Pedido pedidoEditavel) {
+		this.pedidoEditavel = pedidoEditavel;
+	}
+
+	public void carregarPedidoEditavel() {
+		this.pedidoEditavel = pedidoDao.pedidoComItens(this.pedidoEditavel.getId());
+		List<ProdutoAux> test = pedidoDao.pedidoToPedidoAux(produtos, this.pedidoEditavel);
+		produtos = produtoDao.carregarProdutos();
+		this.produtos = produtoDao.carregarDiferençaProdutos(test, produtos);
+		this.edicao = true;
+
+	}
+
+	public boolean isEdicao() {
+		return edicao;
 	}
 
 }

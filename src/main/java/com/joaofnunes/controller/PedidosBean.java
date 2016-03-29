@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -13,19 +13,21 @@ import com.joaofnunes.dao.PedidoDAO;
 import com.joaofnunes.filter.PedidoFilter;
 import com.joaofnunes.model.Funcionario;
 import com.joaofnunes.model.Pedido;
+import com.joaofnunes.model.ProdutoAux;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class PedidosBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	private List<ProdutoAux> test = new ArrayList<>();
 
 	private List<Pedido> produtosFiltrados = new ArrayList<>();
 
 	private Funcionario funcionario;
+
+	private Pedido pedidoSelecionado;
 
 	@Inject
 	private PedidoDAO pedidoDao;
@@ -65,6 +67,31 @@ public class PedidosBean implements Serializable {
 
 	public List<Pedido> getFiltrados() {
 		return this.produtosFiltrados;
+	}
+
+	public void excluir() {
+		pedidoDao.remover(this.pedidoSelecionado);
+		pesquisarFiltrados();
+
+	}
+
+	public Pedido getPedidoSelecionado() {
+		return pedidoSelecionado;
+	}
+
+	public void setPedidoSelecionado(Pedido pedidoSelecionado) {
+		this.pedidoSelecionado = pedidoSelecionado;
+
+	}
+
+	public void editar() {
+		this.test.clear();
+		pedidoSelecionado = pedidoDao.pedidoComItens(this.pedidoSelecionado.getId());
+		pedidoDao.pedidoToPedidoAux(this.test, this.pedidoSelecionado);
+		for (ProdutoAux ip : this.test) {
+			System.out.println(ip.getNome());
+		}
+
 	}
 
 }

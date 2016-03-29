@@ -21,7 +21,7 @@ public class ProdutoDAO implements Serializable {
 
 	@Inject
 	private EntityManager manager;
-	
+
 	@Transactional
 	public Produto guardar(Produto produto) {
 		return manager.merge(produto);
@@ -48,11 +48,8 @@ public class ProdutoDAO implements Serializable {
 	}
 
 	public List<ProdutoAux> carregarProdutos() {
-		System.out.println("carregar chamado");
+
 		List<Produto> listaProdutos = this.manager.createQuery("from Produto ", Produto.class).getResultList();
-		for (Produto produto : listaProdutos) {
-			System.out.println(produto.getNome());
-		}
 		List<ProdutoAux> listaProdutosAux = new ArrayList<>();
 		ProdutoAux prodAux;
 		for (Produto produto : listaProdutos) {
@@ -68,8 +65,21 @@ public class ProdutoDAO implements Serializable {
 
 	}
 
-	
+	public List<ProdutoAux> carregarDiferençaProdutos(List<ProdutoAux> listaProdutosAux,
+			List<ProdutoAux> listaProdutos) {
 
-	
+		ProdutoAux produtoAux;
+
+		for (ProdutoAux produto : listaProdutos) {
+			for (int i = 0; i < listaProdutosAux.size(); i++) {
+				produtoAux = listaProdutosAux.get(i);
+				if (produto.getNome() == produtoAux.getNome()) {
+					produto.setQuantidade(produtoAux.getQuantidade());
+				}
+			}
+		}
+
+		return listaProdutos;
+	}
 
 }

@@ -24,6 +24,7 @@ import com.joaofnunes.model.Pedido;
 import com.joaofnunes.model.Produto;
 import com.joaofnunes.model.ProdutoAux;
 import com.joaofnunes.util.jpa.Transactional;
+import com.joaofnunes.util.jsf.FacesUtil;
 
 public class PedidoDAO implements Serializable {
 
@@ -36,8 +37,9 @@ public class PedidoDAO implements Serializable {
 	private EntityManager manager;
 
 	@Transactional
-	public Pedido guardar(Pedido produto) {
-		return manager.merge(produto);
+	public Pedido guardar(Pedido pedido) {
+		System.out.println(pedido.getId());
+		return manager.merge(pedido);
 	}
 
 	@Transactional
@@ -47,7 +49,7 @@ public class PedidoDAO implements Serializable {
 			manager.remove(pedido);
 			manager.flush();
 		} catch (PersistenceException e) {
-			// throw new NegocioException("Produto não pode ser excluído.");
+			FacesUtil.addErrorMessage("Produto não pode ser apagado.");
 		}
 	}
 
@@ -108,7 +110,7 @@ public class PedidoDAO implements Serializable {
 		return manager.find(Pedido.class, id);
 	}
 
-	public Pedido popularPedido(List<ProdutoAux> produtosAux, Pedido p) {
+	public Pedido popularPedido(List<ProdutoAux> produtosAux, Pedido p,Pedido pedidoEditavel) {
 		Produto produto = null;
 		List<ItemPedido> ipl = new ArrayList<>();
 		ItemPedido ip = new ItemPedido();
@@ -138,8 +140,32 @@ public class PedidoDAO implements Serializable {
 		System.out.println(funcionario.getNome());
 		p.setVendedor(funcionario);
 		p.setDataCriacao(new Date());
-		// p.setFormaPagamento(FormaPagamento.DINHEIRO);
+		if (pedidoEditavel!=null) {
+			p.setId(pedidoEditavel.getId());
+		}
+		System.out.println(p.getId());
 		return p;
+	}
+
+	public Pedido pedidoComItens(Long id) {
+
+		Pedido p = (Pedido) manager.createQuery("select p from Pedido p join p.itens a where p.id = ?")
+				.setParameter(1, id).getSingleResult();
+
+		return p;
+	}
+
+	public List<ProdutoAux> pedidoToPedidoAux(List<ProdutoAux> produtosSelecionados, Pedido pedido) {
+		ProdutoAux produtoAux = null;
+
+		for (ItemPedido ip : pedido.getItens()) {
+			produtoAux = new ProdutoAux(ip.getProduto().getNome(), ip.getQuantidade());
+			produtoAux.setPreco(ip.getValorUnitario().doubleValue());
+			produtoAux.setId(ip.getProduto().getId());
+			produtosSelecionados.add(produtoAux);
+		}
+
+		return produtosSelecionados;
 	}
 
 }
