@@ -14,7 +14,8 @@
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
-					<p:commandButton value="Pesquisar" update="@form"
+					<p:commandButton value="Pesquisar" update="tablePedido"
+						id="btnPesquisar" process="btnPesquisar painel"
 						action="#{produtoBean.pesquisar}" />
 					<p:commandButton value="Novo" process="@this" update="@form"
 						action="#{produtoBean.novoPedido}"
@@ -75,8 +76,7 @@
 
 				<p:column headerText="Utilidade">
 					<p:commandButton value="Editar" process="@this"
-						oncomplete="PF('DialogEdicao').show()"
-						action="#{produtoBean.editarProduto}" update="@form">
+						oncomplete="PF('DialogEdicao').show()" update="@form">
 						<f:setPropertyActionListener value="#{p}"
 							target="#{produtoBean.produtoSelecionado}" />
 					</p:commandButton>
@@ -84,8 +84,7 @@
 				</p:column>
 			</p:dataTable>
 
-			<p:dialog widgetVar="DialogEdicao"
-				rendered="#{produtoBean.edicaoProduto == true}"
+			<p:dialog widgetVar="DialogEdicao" closable="true"
 				header="Atualização de produto " resizable="true"
 				style="min-width: 300px" responsive="true">
 				<h:panelGroup id="itemPanel">
@@ -96,19 +95,16 @@
 						columnClasses="rotulo, campo">
 
 						<p:outputLabel value="Descrição : " />
-						<h:inputText value="#{produtoBean.produtoSelecionado.nome}"
-							rendered="#{produtoBean.edicaoProduto==true}" />
+						<h:inputText value="#{produtoBean.produtoSelecionado.nome}" />
 
 
 						<p:outputLabel value="Preço : " />
 						<h:inputText
-							value="#{produtoBean.produtoSelecionado.valorUnitario}"
-							rendered="#{produtoBean.edicaoProduto==true}" />
+							value="#{produtoBean.produtoSelecionado.valorUnitario}" />
 
 
 						<p:outputLabel value="Custo : " />
-						<h:inputText value="#{produtoBean.produtoSelecionado.custo}"
-							rendered="#{produtoBean.edicaoProduto==true}" />
+						<h:inputText value="#{produtoBean.produtoSelecionado.custo}" />
 
 
 
@@ -119,9 +115,9 @@
 
 					<p:commandButton value="Atualizar"
 						oncomplete="if (!args.validationFailed) PF('DialogEdicao').hide()"
-						process="itemPanel" update="form:tablePedido"
+						process="itemPanel tablePedido" update="tablePedido"
 						action="#{produtoBean.confirmarEdicao}"
-						rendered="#{produtoBean.edicaoProduto}" />
+						 />
 
 
 
@@ -130,8 +126,8 @@
 
 			</p:dialog>
 			<p:dialog widgetVar="DialogNovoProduto" header="Novo Produto "
-				rendered="#{produtoBean.criacaoProduto}" resizable="true"
-				style="min-width: 300px" responsive="true">
+				closable="true" resizable="true" style="min-width: 300px"
+				responsive="true">
 				<h:panelGroup id="itemPanel2">
 
 					<p:messages id="msgDialog" autoUpdate="false" />
@@ -161,8 +157,8 @@
 
 					<p:commandButton value="Criar"
 						oncomplete="if (!args.validationFailed) PF('DialogNovoProduto').hide()"
-						action="#{produtoBean.adicionarProduto}" process="itemPanel2 :form:tablePedido"
-						update=":form:tablePedido" />
+						action="#{produtoBean.adicionarProduto}"
+						process="itemPanel2 tablePedido" update="tablePedido" />
 
 
 
