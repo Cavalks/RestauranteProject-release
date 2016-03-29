@@ -8,6 +8,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import com.joaofnunes.filter.ProdutoFilter;
 import com.joaofnunes.model.Produto;
 import com.joaofnunes.model.ProdutoAux;
 import com.joaofnunes.util.jpa.Transactional;
@@ -81,5 +87,46 @@ public class ProdutoDAO implements Serializable {
 
 		return listaProdutos;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Produto> filtrados(ProdutoFilter filtro) {
+		Session session = this.manager.unwrap(Session.class);
+
+		Criteria criteria = session.createCriteria(Produto.class);
+
+				
+
+		if (filtro.getIdInicial() != null) {
+			// id deve ser maior ou igual (ge = greater or equals) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.ge("id", filtro.getIdInicial()));
+		}
+
+		if (filtro.getIdFinal() != null) {
+			// id deve ser menor ou igual (le = lower or equal) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.le("id", filtro.getIdFinal()));
+		}
+
+		
+
+		if (filtro.getValorInicial() != null) {
+			// id deve ser maior ou igual (ge = greater or equals) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.ge("valorUnitario", filtro.getValorInicial()));
+		}
+
+		if (filtro.getValorFinal() != null) {
+			// id deve ser menor ou igual (le = lower or equal) a
+			// filtro.numeroDe
+			criteria.add(Restrictions.le("valorUnitario", filtro.getValorFinal()));
+		}
+
+		
+
+		return criteria.addOrder(Order.asc("id")).list();
+	}
+	
+	
 
 }

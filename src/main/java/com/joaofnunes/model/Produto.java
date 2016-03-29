@@ -22,7 +22,7 @@ public class Produto implements Serializable {
 	private Long id;
 	private String nome;
 	private BigDecimal valorUnitario;
-	private BigDecimal custo  ;
+	private BigDecimal custo;
 
 	@Id
 	@GeneratedValue
@@ -45,7 +45,7 @@ public class Produto implements Serializable {
 		this.nome = nome;
 	}
 
-	@NotNull(message = "é obrigatório")
+	@NotNull(message = "Valor unitário : é obrigatório")
 	@Column(name = "valor_unitario", nullable = false, precision = 10, scale = 2)
 	public BigDecimal getValorUnitario() {
 		return valorUnitario;
@@ -54,8 +54,8 @@ public class Produto implements Serializable {
 	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
-	
-	@NotNull(message = "é obrigatório")
+
+	@NotNull(message = "Custo : é obrigatório")
 	@Column(nullable = false, precision = 10, scale = 2)
 	public BigDecimal getCusto() {
 		return custo;

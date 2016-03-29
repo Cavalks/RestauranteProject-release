@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/Layout.xhtml">
+
+	<ui:define name="content">
+		<h1 class="aw-page-title">Produtos</h1>
+
+
+		<h:form id="form">
+			<p:messages closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" update="@form"
+						action="#{produtoBean.pesquisar}" />
+					<p:commandButton value="Novo" process="@this" update="@form"
+						action="#{produtoBean.novoPedido}"
+						oncomplete="PF('DialogNovoProduto').show()" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+				<p:outputLabel value="Número" />
+				<h:panelGroup>
+					<p:inputText size="10"
+						value="#{produtoBean.produtoFilter.idInicial}" />
+	    			a
+	    			<p:inputText size="10"
+						value="#{produtoBean.produtoFilter.idFinal}" />
+				</h:panelGroup>
+
+
+
+
+
+				<p:outputLabel value="Valor" />
+				<h:panelGroup>
+					<p:inputText size="10"
+						value="#{produtoBean.produtoFilter.valorInicial}" />
+	    			a
+	    			<p:inputText size="10"
+						value="#{produtoBean.produtoFilter.valorFinal}" />
+				</h:panelGroup>
+
+			</p:panelGrid>
+
+
+
+			<p:dataTable style="margin-top: 20px" id="tablePedido" var="p"
+				value="#{produtoBean.produtosFiltrados}"
+				emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				lazy="true">
+				<p:column headerText="Número">
+					<h:outputText value="#{p.id}" />
+				</p:column>
+
+				<p:column headerText="Descrição">
+					<h:outputText value="#{p.nome}" />
+				</p:column>
+
+
+
+
+				<p:column headerText="Preço">
+					<h:outputText value="#{p.valorUnitario}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Utilidade">
+					<p:commandButton value="Editar" process="@this"
+						oncomplete="PF('DialogEdicao').show()"
+						action="#{produtoBean.editarProduto}" update="@form">
+						<f:setPropertyActionListener value="#{p}"
+							target="#{produtoBean.produtoSelecionado}" />
+					</p:commandButton>
+
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog widgetVar="DialogEdicao"
+				rendered="#{produtoBean.edicaoProduto == true}"
+				header="Atualização de produto " resizable="true"
+				style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel">
+
+
+					<p:panelGrid columns="2" id="painelEdicao"
+						style="width: 100%; margin-top: 20px"
+						columnClasses="rotulo, campo">
+
+						<p:outputLabel value="Descrição : " />
+						<h:inputText value="#{produtoBean.produtoSelecionado.nome}"
+							rendered="#{produtoBean.edicaoProduto==true}" />
+
+
+						<p:outputLabel value="Preço : " />
+						<h:inputText
+							value="#{produtoBean.produtoSelecionado.valorUnitario}"
+							rendered="#{produtoBean.edicaoProduto==true}" />
+
+
+						<p:outputLabel value="Custo : " />
+						<h:inputText value="#{produtoBean.produtoSelecionado.custo}"
+							rendered="#{produtoBean.edicaoProduto==true}" />
+
+
+
+
+					</p:panelGrid>
+
+
+
+					<p:commandButton value="Atualizar"
+						oncomplete="if (!args.validationFailed) PF('DialogEdicao').hide()"
+						process="itemPanel" update="form:tablePedido"
+						action="#{produtoBean.confirmarEdicao}"
+						rendered="#{produtoBean.edicaoProduto}" />
+
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+			<p:dialog widgetVar="DialogNovoProduto" header="Novo Produto "
+				rendered="#{produtoBean.criacaoProduto}" resizable="true"
+				style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel2">
+
+					<p:messages id="msgDialog" autoUpdate="false" />
+					<p:panelGrid columns="2" id="painelNovoProduto"
+						style="width: 100%; margin-top: 20px"
+						columnClasses="rotulo, campo">
+
+						<p:outputLabel value="Descrição : " />
+
+						<h:inputText value="#{produtoBean.novoProduto.nome}"
+							required="true" requiredMessage="Descrição : é obrigatório ." />
+
+						<p:outputLabel value="Preço : " />
+						<h:inputText value="#{produtoBean.novoProduto.valorUnitario}" />
+
+
+						<p:outputLabel value="Custo : " />
+						<h:inputText value="#{produtoBean.novoProduto.custo}" />
+
+
+
+
+					</p:panelGrid>
+
+
+
+
+					<p:commandButton value="Criar"
+						oncomplete="if (!args.validationFailed) PF('DialogNovoProduto').hide()"
+						action="#{produtoBean.adicionarProduto}" process="itemPanel2 :form:tablePedido"
+						update=":form:tablePedido" />
+
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+
+
+
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
