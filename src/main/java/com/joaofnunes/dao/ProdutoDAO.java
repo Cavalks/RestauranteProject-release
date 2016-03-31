@@ -1,7 +1,10 @@
 package com.joaofnunes.dao;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -87,14 +90,13 @@ public class ProdutoDAO implements Serializable {
 
 		return listaProdutos;
 	}
-	
+
 	@SuppressWarnings("unchecked")
+
 	public List<Produto> filtrados(ProdutoFilter filtro) {
 		Session session = this.manager.unwrap(Session.class);
 
 		Criteria criteria = session.createCriteria(Produto.class);
-
-				
 
 		if (filtro.getIdInicial() != null) {
 			// id deve ser maior ou igual (ge = greater or equals) a
@@ -108,8 +110,6 @@ public class ProdutoDAO implements Serializable {
 			criteria.add(Restrictions.le("id", filtro.getIdFinal()));
 		}
 
-		
-
 		if (filtro.getValorInicial() != null) {
 			// id deve ser maior ou igual (ge = greater or equals) a
 			// filtro.numeroDe
@@ -122,11 +122,45 @@ public class ProdutoDAO implements Serializable {
 			criteria.add(Restrictions.le("valorUnitario", filtro.getValorFinal()));
 		}
 
-		
-
 		return criteria.addOrder(Order.asc("id")).list();
 	}
-	
-	
+
+	public List<Produto> listaGrafico(int numero) {
+
+		Calendar calendarInicial = Calendar.getInstance();
+		Date dataFinal = new Date();
+
+		if (numero == 1) {
+			calendarInicial.add(Calendar.DAY_OF_MONTH, -7);
+		} else if (numero == 2) {
+			calendarInicial.add(Calendar.DAY_OF_MONTH, -15);
+		} else if (numero == 3) {
+			calendarInicial.add(Calendar.MONTH, -1);
+		} else if (numero == 4) {
+			calendarInicial.add(Calendar.YEAR, -1);
+		}
+		System.out.println("Inicial : ");
+		System.out.println(new SimpleDateFormat("dd-MM-yyyy").format(calendarInicial.getTime()));
+		System.out.println("Final : ");
+		System.out.println(new SimpleDateFormat("dd-MM-yyyy").format(dataFinal));
+
+		// CriteriaBuilder builder = manager.getCriteriaBuilder();
+		// CriteriaQuery<Produto> query = builder.createQuery(Produto.class);
+		// Root<Produto> p = query.from(Produto.class);
+		// query.select(p);
+		// Session session = this.manager.unwrap(Session.class);
+		//
+		// Criteria criteria = session.createCriteria(Produto.class);
+		//
+		// // id deve ser maior ou igual (ge = greater or equals) a
+		// // filtro.numeroDe
+		// criteria.add(Restrictions.ge("id", calendarInicial.getTime()));
+		//
+		// // id deve ser menor ou igual (le = lower or equal) a
+		// // filtro.numeroDe
+		// criteria.add(Restrictions.le("id", dataFinal));
+
+		return null;
+	}
 
 }

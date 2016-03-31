@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/Layout.xhtml">
+
+	<ui:define name="content">
+		<h1 class="aw-page-title">Gráficos</h1>
+
+		<h:form id="frm">
+
+			<br />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Produtos" 	action="#{graficosBean.actionProdutos}"
+						 update="frm" />
+
+					<p:commandButton value="Pedidos"
+						action="#{graficosBean.actionPedidos}" update="frm" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<br />
+			<p:panel id="panelPedidos"
+				rendered="#{graficosBean.pedidosValidation}">
+				<h1>Faturamento</h1>
+				<br />
+				<p:outputLabel value="Selecione o intervalo : " />
+				<p:selectOneRadio value="#{graficosBean.resultadoLista}">
+					<f:selectItem itemLabel="7 dias" itemValue="1" />
+					<f:selectItem itemLabel="15 dias" itemValue="2" />
+					<f:selectItem itemLabel="30 dias" itemValue="3" />
+					<f:selectItem itemLabel="1 ano" itemValue="4" />
+					<p:ajax event="click" listener="#{graficosBean.actionGraficoAjax}"
+						update="@form" />
+				</p:selectOneRadio>
+
+				<p:chart type="pie" model="#{graficosBean.pie.pieModel1}"
+					rendered="false" style="width:400px;height:300px" />
+
+				<p:chart type="bar" model="#{graficosBean.line.animatedModel2}"
+					rendered="#{graficosBean.resultadoLista ==1 ||graficosBean.resultadoLista ==2 ||graficosBean.resultadoLista ==3||graficosBean.resultadoLista ==4}"
+					style="height: 400px" />
+			</p:panel>
+
+
+			<p:panel id="panelProdutos"
+				rendered="#{graficosBean.produtosValidation}">
+
+
+
+			</p:panel>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
