@@ -1,6 +1,7 @@
 package com.joaofnunes.dao;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -19,6 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import com.joaofnunes.filter.ProdutoFilter;
 import com.joaofnunes.model.Produto;
 import com.joaofnunes.model.ProdutoAux;
+import com.joaofnunes.model.queries.Produtos;
 import com.joaofnunes.util.jpa.Transactional;
 
 public class ProdutoDAO implements Serializable {
@@ -144,23 +147,247 @@ public class ProdutoDAO implements Serializable {
 		System.out.println("Final : ");
 		System.out.println(new SimpleDateFormat("dd-MM-yyyy").format(dataFinal));
 
-		// CriteriaBuilder builder = manager.getCriteriaBuilder();
-		// CriteriaQuery<Produto> query = builder.createQuery(Produto.class);
-		// Root<Produto> p = query.from(Produto.class);
-		// query.select(p);
-		// Session session = this.manager.unwrap(Session.class);
-		//
-		// Criteria criteria = session.createCriteria(Produto.class);
-		//
-		// // id deve ser maior ou igual (ge = greater or equals) a
-		// // filtro.numeroDe
-		// criteria.add(Restrictions.ge("id", calendarInicial.getTime()));
-		//
-		// // id deve ser menor ou igual (le = lower or equal) a
-		// // filtro.numeroDe
-		// criteria.add(Restrictions.le("id", dataFinal));
-
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Produtos> listaConsultaGraficoPorPeriodo(Integer opcao) {
+		Calendar dataInicial = Calendar.getInstance();
+		Calendar dataFinal = null;
+		List<Produtos> lista = null;
+		if (opcao == 1) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -7);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 2) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -15);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 3) {
+			dataInicial.add(Calendar.MONTH, -1);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 4) {
+			dataInicial.add(Calendar.YEAR, -1);
+			dataFinal = Calendar.getInstance();
+		}
+
+		lista = manager
+				.createQuery(
+						"Select new com.joaofnunes.model.queries.Produtos((itens.produto.nome) , (itens.produto.valorUnitario) , (itens.produto.custo) , (sum(itens.quantidade)) ) from Pedido P join P.itens itens where p.dataCriacao between :dateBegin AND :dateEnd  group by itens.produto.nome , itens.produto.valorUnitario , itens.produto.custo")
+				.setParameter("dateBegin", dataInicial.getTime()).setParameter("dateEnd", dataFinal.getTime())
+				.getResultList();
+
+		return lista;
+	}
+
+	public List<Produtos> produtosTotalGrafic() {
+		@SuppressWarnings("unchecked")
+		// List<Object[]> lista = manager
+		// .createQuery(
+		// "Select itens.produto.nome , itens.produto.valorUnitario ,
+		// itens.produto.custo , count(itens.quantidade) , sum(itens.quantidade)
+		// from Pedido P join P.itens itens group by itens.produto.nome ,
+		// itens.produto.valorUnitario , itens.produto.custo ")
+		// .getResultList();
+
+		List<Produtos> produtos = manager
+				.createQuery(
+						"Select new com.joaofnunes.model.queries.Produtos((itens.produto.nome) , (itens.produto.valorUnitario) , (itens.produto.custo) , (sum(itens.quantidade)) ) from Pedido P join P.itens itens  group by itens.produto.nome , itens.produto.valorUnitario , itens.produto.custo ")
+				.getResultList();
+
+		return produtos;
+	}
+
+	public String porcentagemProdutosTotal(List<Object[]> produtos) {
+		StringBuilder sb = new StringBuilder();
+		Long quantidade = manager
+				.createQuery("Select sum(itens.quantidade) from Pedido P join P.itens itens ", Long.class)
+				.getSingleResult();
+
+		for (Object[] objects : produtos) {
+			System.out.println(objects[0] + " " + objects[1]);
+
+			Double valorFinal = (((Long) objects[1]).doubleValue() * 100) / quantidade;
+			String resultado = String.format("%.2f", valorFinal);
+			sb.append(((String) objects[0]) + " :  " + resultado + "%");
+			sb.append("<br/>");
+		}
+
+		return sb.toString();
+	}
+
+	public Long quantidadeProdutos() {
+		return (Long) manager.createQuery("Select sum(itens.quantidade) from Pedido P join P.itens itens ")
+				.getSingleResult();
+	}
+
+	public Integer maiorValorTotal() {
+		return manager.createQuery("Select max(itens.quantidade) from Pedido P join P.itens itens", Integer.class)
+				.getSingleResult();
+	}
+
+	public Long quantidadeProdutosPorPeriodo(Integer opcao) {
+		Calendar dataInicial = Calendar.getInstance();
+		Calendar dataFinal = null;
+		Long result = null;
+		if (opcao == 1) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -7);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 2) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -15);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 3) {
+			dataInicial.add(Calendar.MONTH, -1);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 4) {
+			dataInicial.add(Calendar.YEAR, -1);
+			dataFinal = Calendar.getInstance();
+		}
+
+		result = (Long) manager
+				.createQuery(
+						"Select sum(itens.quantidade) from Pedido P join P.itens itens where p.dataCriacao between :dateBegin AND :dateEnd ")
+				.setParameter("dateBegin", dataInicial.getTime()).setParameter("dateEnd", dataFinal.getTime())
+				.getSingleResult();
+
+		return (long) result;
+	}
+
+	public List<Produto> getProdutos() {
+		return manager.createQuery("from Produto p ", Produto.class).getResultList();
+	}
+
+	public List<Produtos> preencherLista(int opcao) {
+
+		Calendar calendar = Calendar.getInstance();
+		List<Produtos> pedidos = new ArrayList<>();
+		calendar = DateUtils.truncate(calendar, Calendar.DAY_OF_MONTH);
+		Produtos produto = null;
+
+		if (opcao == 1) {
+			for (int i = 0; i < 7; i++) {
+				produto = new Produtos("", new BigDecimal(0), new BigDecimal(0), new Long(0), calendar.getTime(),
+						new BigDecimal(0));
+				pedidos.add(produto);
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+
+			}
+		} else if (opcao == 2) {
+			for (int i = 0; i < 15; i++) {
+				produto = new Produtos("", new BigDecimal(0), new BigDecimal(0), new Long(0), calendar.getTime(),
+						new BigDecimal(0));
+				pedidos.add(produto);
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+			}
+		} else if (opcao == 3) {
+			for (int i = 0; i < 30; i++) {
+				produto = new Produtos("", new BigDecimal(0), new BigDecimal(0), new Long(0), calendar.getTime(),
+						new BigDecimal(0));
+				pedidos.add(produto);
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+			}
+		} else if (opcao == 4) {
+
+			for (int i = 0; i < 12; i++) {
+				produto = new Produtos("", new BigDecimal(0), (calendar.get(Calendar.MONTH) + 1),
+						calendar.get(Calendar.YEAR), new BigDecimal(0), new BigDecimal(0), new Long(0));
+				pedidos.add(produto);
+				calendar.add(Calendar.MONTH, -1);
+			}
+		}
+
+		return pedidos;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Produtos> listaConsultaGraficos(Integer opcao, Long produtoID) {
+		Calendar dataInicial = Calendar.getInstance();
+		Calendar dataFinal = null;
+		List<Produtos> lista = null;
+		if (opcao == 1) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -7);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 2) {
+			dataInicial.add(Calendar.DAY_OF_MONTH, -15);
+			dataFinal = Calendar.getInstance();
+		} else if (opcao == 3) {
+			dataInicial.add(Calendar.MONTH, -1);
+			dataFinal = Calendar.getInstance();
+		}
+
+		if (opcao == 1 || opcao == 2 || opcao == 3) {
+
+			lista = manager
+					.createQuery(
+							"Select new com.joaofnunes.model.queries.Produtos((itens.produto.nome) , (itens.produto.valorUnitario) , (itens.produto.custo) , (sum(itens.quantidade)), DATE(p.dataCriacao) , sum(itens.valorUnitario*itens.quantidade) ) from Pedido P  join P.itens itens where itens.produto.id = :num and p.dataCriacao between :dateBegin AND :dateEnd group by itens.produto.nome , itens.produto.valorUnitario , itens.produto.custo,DATE(p.dataCriacao) ")
+					.setParameter("dateBegin", dataInicial.getTime()).setParameter("dateEnd", dataFinal.getTime())
+					.setParameter("num", produtoID).getResultList();
+
+		} else if (opcao == 4) {
+			lista = manager
+					.createQuery(
+							"Select new com.joaofnunes.model.queries.Produtos((itens.produto.nome) , sum(P.valorTotal) ,MONTH(P.dataCriacao) ,YEAR(P.dataCriacao) ,(itens.produto.valorUnitario), (itens.produto.custo) , (sum(itens.quantidade)) ) from Pedido P   join P.itens itens where itens.produto.id = :num  group by (itens.produto.nome) ,MONTH(P.dataCriacao) ,YEAR(P.dataCriacao) ,(itens.produto.valorUnitario), (itens.produto.custo)  ")
+					.setParameter("num", produtoID).getResultList();
+
+		}
+		// for (Produtos produtos : lista) {
+		// Calendar calendar = Calendar.getInstance();
+		// calendar.setTime(produtos.getDate());
+		// calendar = DateUtils.truncate(calendar, Calendar.DAY_OF_MONTH);
+		// produtos.setDate(calendar.getTime());
+		// }
+
+		return lista;
+	}
+
+	public List<Produtos> unificarListasConsultaUnicoProduto(List<Produtos> listaGrande, List<Produtos> listaFiltrada,
+			Integer opcao) {
+		System.out.println("Unificar chamado");
+
+		if (opcao != 4) {
+
+			for (Produtos prod1 : listaGrande) {
+
+				for (Produtos prod2 : listaFiltrada) {
+
+					if (prod1.getDate().equals(prod2.getDate())) {
+
+						prod1.setDescicao(prod2.getDescricao());
+						prod1.setValorUnitario(prod2.getValorUnitario());
+						prod1.setCusto(prod2.getCusto());
+						prod1.setQuantidade(prod2.getQuantidade());
+						prod1.setDate(prod2.getDate());
+						prod1.setValorTotal(prod2.getValorTotal());
+						prod1.setCusto(prod2.getCusto());
+						
+					}
+
+				}
+			}
+		}
+		if (opcao == 4) {
+			
+			for (Produtos prod1 : listaGrande) {
+
+				for (Produtos prod2 : listaFiltrada) {
+
+					if (prod1.getAno().equals(prod2.getAno()) && prod1.getMes().equals(prod2.getMes())) {
+
+						prod1.setDescicao(prod2.getDescricao());
+						prod1.setValorUnitario(prod2.getValorUnitario());
+						prod1.setCusto(prod2.getCusto());
+						prod1.setQuantidade(prod2.getQuantidade());
+						prod1.setValorTotal(prod2.getValorTotal());
+						prod1.setCusto(prod2.getCusto());
+						
+					}
+
+				}
+			}
+		}
+
+		return listaGrande;
+	}
+	
+	
 
 }

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.algaworks</groupId>
-	<artifactId>blue-algaworks</artifactId>
+	<artifactId>restaurante</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 

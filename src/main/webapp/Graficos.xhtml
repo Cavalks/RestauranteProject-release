@@ -11,11 +11,13 @@
 		<h:form id="frm">
 
 			<br />
+			<f:event listener="#{graficosBean.carregarCombo}"
+				type="preRenderView" />
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
-					<p:commandButton value="Produtos" 	action="#{graficosBean.actionProdutos}"
-						 update="frm" />
+					<p:commandButton value="Produtos"
+						action="#{graficosBean.actionProdutos}" update="frm" />
 
 					<p:commandButton value="Pedidos"
 						action="#{graficosBean.actionPedidos}" update="frm" />
@@ -27,26 +29,287 @@
 				<h1>Faturamento</h1>
 				<br />
 				<p:outputLabel value="Selecione o intervalo : " />
-				<p:selectOneRadio value="#{graficosBean.resultadoLista}">
+				<p:selectOneRadio value="#{graficosBean.resultadoListaPedidos}">
 					<f:selectItem itemLabel="7 dias" itemValue="1" />
 					<f:selectItem itemLabel="15 dias" itemValue="2" />
 					<f:selectItem itemLabel="30 dias" itemValue="3" />
 					<f:selectItem itemLabel="1 ano" itemValue="4" />
-					<p:ajax event="click" listener="#{graficosBean.actionGraficoAjax}"
-						update="@form" />
+					<p:ajax event="click"
+						listener="#{graficosBean.actionGraficoAjaxPedido}" update="@form" />
 				</p:selectOneRadio>
 
-				<p:chart type="pie" model="#{graficosBean.pie.pieModel1}"
-					rendered="false" style="width:400px;height:300px" />
+
 
 				<p:chart type="bar" model="#{graficosBean.line.animatedModel2}"
-					rendered="#{graficosBean.resultadoLista ==1 ||graficosBean.resultadoLista ==2 ||graficosBean.resultadoLista ==3||graficosBean.resultadoLista ==4}"
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}"
 					style="height: 400px" />
+
+				<p:dataTable value="#{graficosBean.listafiltradaPedido}" var="p"
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}">
+
+
+					<p:column headerText="Data">
+						<p:outputLabel value="#{p.dataFormatada}" />
+					</p:column>
+
+					<p:column headerText="Valor total : ">
+						<p:outputLabel value="#{p.valorTotal}" />
+					</p:column>
+
+					<p:column headerText="Custo total : ">
+						<p:outputLabel value="#{p.custoTotal}" />
+					</p:column>
+
+					<p:column headerText="Lucro : ">
+						<p:outputLabel value="#{p.lucro}" />
+					</p:column>
+				</p:dataTable>
+
+				<p:outputLabel value="Lucro Total : "
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}"
+					style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
+				<h:outputLabel value="#{graficosBean.lucroTotalPedidos}"
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}">
+					<f:convertNumber type="currency" />
+				</h:outputLabel>
+				<br />
+				<p:outputLabel value="Custo Total  : "
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}"
+					style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
+				<h:outputLabel value="#{graficosBean.gastoTotalPedidos}"
+					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}">
+
+				</h:outputLabel>
+
+
+
+
 			</p:panel>
 
 
 			<p:panel id="panelProdutos"
 				rendered="#{graficosBean.produtosValidation}">
+
+
+
+				<p:tabView>
+
+					<p:tab title="Todos os produtos">
+
+
+
+						<p:chart type="pie" model="#{graficosBean.pie.pieModel1}"
+							style="height: 400px" />
+
+						<h1>Resultados</h1>
+						<p:dataTable value="#{graficosBean.produtosQuery}" var="p">
+							<p:column headerText="Produto">
+								<p:outputLabel value="#{p.descricao}" />
+							</p:column>
+
+							<p:column headerText="Quantidade">
+								<p:outputLabel value="#{p.quantidade}" />
+							</p:column>
+
+							<p:column headerText="Custo">
+								<p:outputLabel value="#{p.custo}" />
+							</p:column>
+
+							<p:column headerText="Valor Unitário">
+								<p:outputLabel value="#{p.valorUnitario}" />
+							</p:column>
+
+							<p:column headerText="Lucro">
+								<p:outputLabel value="#{p.lucro}" />
+							</p:column>
+
+							<p:column headerText="%">
+								<p:outputLabel value="#{p.porcentagem}" />
+							</p:column>
+
+
+						</p:dataTable>
+						<p:outputLabel value="Lucro Total : "
+							style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
+						<h:outputLabel value="#{graficosBean.lucroTotalProdutos}">
+							<f:convertNumber type="currency" />
+						</h:outputLabel>
+						<br />
+						<p:outputLabel value="Custo Total  : "
+							style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
+						<h:outputLabel value="#{graficosBean.gastoTotalProdutos}">
+
+						</h:outputLabel>
+
+
+					</p:tab>
+
+
+
+					<p:tab title="Produtos por periodo">
+						<p:panel id="painel">
+							<h1>Por periodo :</h1>
+							<br />
+							<p:selectOneRadio value="#{graficosBean.resultadoListaProdutos}">
+								<f:selectItem itemLabel="7 dias" itemValue="1" />
+								<f:selectItem itemLabel="15 dias" itemValue="2" />
+								<f:selectItem itemLabel="30 dias" itemValue="3" />
+								<f:selectItem itemLabel="1 ano" itemValue="4" />
+								<p:ajax event="click"
+									listener="#{graficosBean.actionGraficoAjaxProduto}"
+									update="painel" />
+							</p:selectOneRadio>
+
+							<p:chart type="bar" model="#{graficosBean.line.animatedModel2}"
+								id="chart2"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}"
+								style="height: 400px" />
+
+
+							<p:dataTable value="#{graficosBean.produtos}" var="p"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}"
+								id="datatable2" emptyMessage="Sem registros">
+								<p:column headerText="Produto">
+									<p:outputLabel value="#{p.descricao}" />
+								</p:column>
+
+								<p:column headerText="Quantidade">
+									<p:outputLabel value="#{p.quantidade}" />
+								</p:column>
+
+								<p:column headerText="Custo">
+									<p:outputLabel value="#{p.custo}" />
+								</p:column>
+
+								<p:column headerText="Valor Unitário">
+									<p:outputLabel value="#{p.valorUnitario}" />
+								</p:column>
+
+								<p:column headerText="Lucro">
+									<p:outputLabel value="#{p.lucro}" />
+								</p:column>
+
+								<p:column headerText="%">
+									<p:outputLabel value="#{p.porcentagem}" />
+								</p:column>
+
+
+							</p:dataTable>
+
+							<p:outputLabel value="Lucro Total : "
+								style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}" />
+							<h:outputLabel
+								value="#{graficosBean.lucroTotalProdutosPorPeriodo}"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}">
+								<f:convertNumber type="currency" />
+							</h:outputLabel>
+							<br />
+							<p:outputLabel value="Gasto Total : "
+								style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}" />
+							<h:outputLabel
+								value="#{graficosBean.gastoTotalProdutosPorPeriodo}"
+								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}">
+
+							</h:outputLabel>
+
+
+						</p:panel>
+					</p:tab>
+
+
+					<p:tab title="Pesquisa por produto individual">
+
+						<h1>Pesquisa individual</h1>
+						<p:panelGrid columns="5">
+
+							<p:outputLabel value="Período " />
+							<p:selectOneMenu style="width:125px"
+								value="#{graficosBean.resultadoComboBox}" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="0"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="7 dias" itemValue="1" />
+								<f:selectItem itemLabel="15 dias" itemValue="2" />
+								<f:selectItem itemLabel="30 dias" itemValue="3" />
+								<f:selectItem itemLabel="1 ano" itemValue="4" />
+							</p:selectOneMenu>
+							<p:outputLabel value="do produto : " />
+							<p:selectOneMenu style="width:125px" required="true"
+								value="#{graficosBean.produtoSelecionadoCombo}">
+								<f:selectItem itemLabel="Selecione" itemValue="0"
+									noSelectionOption="true" />
+								<f:selectItems value="#{graficosBean.produtosListaMenuBox}"
+									var="p" itemLabel="#{p.nome}" itemValue="#{p}" />
+							</p:selectOneMenu>
+							<p:commandButton value="Consultar"
+								action="#{graficosBean.processar}" update="@form" />
+						</p:panelGrid>
+						<p:chart type="bar" model="#{graficosBean.line.animatedModel2}"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}"
+							style="height: 400px" />
+
+						<p:dataTable value="#{graficosBean.produtosUnicosFiltrados}"
+							var="p"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}">
+							<p:column headerText="Produto">
+								<p:outputLabel value="#{p.descricao}" />
+							</p:column>
+
+							<p:column headerText="Quantidade">
+								<p:outputLabel value="#{p.quantidade}" />
+							</p:column>
+
+							<p:column headerText="Custo">
+								<p:outputLabel value="#{p.custo}" />
+							</p:column>
+
+							<p:column headerText="Valor Unitário">
+								<p:outputLabel value="#{p.valorUnitario}" />
+							</p:column>
+
+							<p:column headerText="Lucro">
+								<p:outputLabel value="#{p.lucro}" />
+							</p:column>
+
+							<p:column headerText="Data">
+								<p:outputLabel value="#{p.dataProdutoUnitario}" />
+							</p:column>
+
+
+
+
+						</p:dataTable>
+
+						<p:outputLabel value="Lucro Total : "
+							style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}" />
+						<h:outputLabel value="#{graficosBean.lucroProdutoUnico}"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}">
+							<f:convertNumber type="currency" />
+						</h:outputLabel>
+						<br />
+						<p:outputLabel value="Gasto Total : "
+							style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}" />
+						<h:outputLabel value="#{graficosBean.custoProdutoUnico}"
+							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}">
+
+						</h:outputLabel>
+
+
+
+
+
+					</p:tab>
+
+
+
+				</p:tabView>
+
+
+
+
 
 
 

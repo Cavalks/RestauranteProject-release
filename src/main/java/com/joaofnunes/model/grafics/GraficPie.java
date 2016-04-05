@@ -1,35 +1,55 @@
 package com.joaofnunes.model.grafics;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.primefaces.model.chart.PieChartModel;
 
-public class GraficPie {
+import com.joaofnunes.dao.ProdutoDAO;
+import com.joaofnunes.model.queries.Produtos;
+
+public class GraficPie implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private PieChartModel pieModel1;
+	private List<Produtos> produtos;
+	
+	@Inject
+	private ProdutoDAO produtoDAO;
 
 	public PieChartModel getPieModel1() {
 
 		return pieModel1;
 	}
 
-	private void createPieModel1(List<PedidoQuery> produtos) {
+	private void createPieModel1() {
 		pieModel1 = new PieChartModel();
-		for (PedidoQuery pedidoQuery : produtos) {
-			SimpleDateFormat simple = new SimpleDateFormat("dd/MM");
-			String data = simple.format(pedidoQuery.getDate());
-			System.out.println(data);
-			pieModel1.set(data, pedidoQuery.getValor());
+
+		for (Produtos objects : produtos) {
+			pieModel1.set(objects.getDescricao(), objects.getQuantidade());
+			objects.setPorcentagem(calcularPorcentagem(produtoDAO.quantidadeProdutos(), objects.getQuantidade()));
 			
 		}
 
-		pieModel1.setTitle("Pedidos");
+		pieModel1.setTitle("Produtos");
 		pieModel1.setLegendPosition("w");
 	}
 
-	public void preencher(List<PedidoQuery> produtos) {
-		createPieModel1(produtos);
+	
+	public void preencher(List<Produtos> produtos) {
+		this.produtos = produtos;
+		createPieModel1();
 
+	}
+
+	public String calcularPorcentagem(Long value, Long quantidade) {
+
+		Double valorFinal = (quantidade.doubleValue()/value.doubleValue())*100;
+		return String.format("%.2f", valorFinal) + "%";
 	}
 
 }

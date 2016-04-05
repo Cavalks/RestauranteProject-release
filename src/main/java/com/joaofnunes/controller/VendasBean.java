@@ -87,7 +87,7 @@ public class VendasBean implements Serializable {
 	public String etapa4() {
 		if (troco()) {
 			this.condicoesVenda.selecionarEtapa(4, pedido);
-			this.pedidoDao.popularPedido(produtosSelecionados, pedido, pedidoEditavel);
+			this.pedido = this.pedidoDao.popularPedido(produtosSelecionados, pedido, pedidoEditavel);
 			this.pedido = this.pedidoDao.guardar(pedido);
 		}
 

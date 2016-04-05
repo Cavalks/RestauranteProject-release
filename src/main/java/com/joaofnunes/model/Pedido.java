@@ -2,6 +2,7 @@ package com.joaofnunes.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -150,6 +151,11 @@ public class Pedido implements Serializable {
 	@Transient
 	public boolean isnEdicao() {
 		return !isEdicao();
+	}
+	@Transient 
+	public String getDataformatada(){
+		SimpleDateFormat simple = new SimpleDateFormat("dd/MM/yyyy");
+		return simple.format(dataCriacao);
 	}
 
 }

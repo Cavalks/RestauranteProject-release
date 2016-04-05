@@ -10,18 +10,14 @@ import org.apache.commons.lang3.time.DateUtils;
 
 public class Main {
 	public static void main(String[] args) {
-
+	
+	
 		// EntityManagerFactory factory =
 		// Persistence.createEntityManagerFactory("PedidoPU");
 		// EntityManager manager = factory.createEntityManager();
 		// Session session = manager.unwrap(Session.class);
-		// List<Object[]> lista =
-		// manager.createQuery("Select MONTH(P.dataCriacao) , sum(P.valorTotal)
-		// from Pedido P group by MONTH(P.dataCriacao) ").getResultList();
-		// for (Object[] objects : lista) {
-		// System.out.println(objects[0]);
-		// System.out.println(objects[1]);
-		// }
+		// System.out.println(Calendar.getInstance().get(Calendar.YEAR));
+		//
 		// session.close();
 	}
 
@@ -32,7 +28,7 @@ public class Main {
 		@SuppressWarnings("unchecked")
 		List<Object[]> lista = manager
 				.createQuery(
-						"Select DATE(c.dataCriacao),sum(c.valorTotal) from Pedido c  where c.dataCriacao between :dateBegin AND :dateEnd group by DATE(c.dataCriacao)")
+						"Select DATE(c.dataCriacao),sum(c.valorTotal) from Pedido c  where c.dataCriacao between :dateBegin AND :dateEnd group by DATE(c.dataCriacao) order by ")
 				.setParameter("dateBegin", dataInicial.getTime()).setParameter("dateEnd", dataFinal.getTime())
 				.getResultList();
 		;
