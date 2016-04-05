@@ -329,12 +329,7 @@ public class ProdutoDAO implements Serializable {
 					.setParameter("num", produtoID).getResultList();
 
 		}
-		// for (Produtos produtos : lista) {
-		// Calendar calendar = Calendar.getInstance();
-		// calendar.setTime(produtos.getDate());
-		// calendar = DateUtils.truncate(calendar, Calendar.DAY_OF_MONTH);
-		// produtos.setDate(calendar.getTime());
-		// }
+		
 
 		return lista;
 	}

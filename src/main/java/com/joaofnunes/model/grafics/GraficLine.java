@@ -134,7 +134,7 @@ public class GraficLine implements Serializable {
 
 		Collections.reverse(pedidos);
 		if (returnOpcaoPedidos == 1 || returnOpcaoPedidos == 2 || returnOpcaoPedidos == 3) {
-			
+
 			for (Pedidos pedidoQuery : pedidos) {
 
 				boys.set(simple.format(pedidoQuery.getData()), pedidoQuery.getValorTotal());
@@ -208,7 +208,13 @@ public class GraficLine implements Serializable {
 			}
 
 		}
-		
+		if (returnOpcaoProdutosUnico == 4) {
+			for (Produtos prod : produtos) {
+
+				boys.set((prod.getMes() + "/" + prod.getAno()), prod.getValorTotal());
+
+			}
+		}
 
 		model.addSeries(boys);
 
