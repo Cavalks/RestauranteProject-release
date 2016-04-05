@@ -26,6 +26,8 @@ import com.joaofnunes.model.Pedido;
 import com.joaofnunes.model.Produto;
 import com.joaofnunes.model.ProdutoAux;
 import com.joaofnunes.model.queries.Pedidos;
+import com.joaofnunes.security.UsuarioLogado;
+import com.joaofnunes.security.UsuarioSistema;
 import com.joaofnunes.util.jpa.Transactional;
 import com.joaofnunes.util.jsf.FacesUtil;
 
@@ -35,6 +37,10 @@ public class PedidoDAO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@Inject
+	@UsuarioLogado
+	UsuarioSistema usuarioSistema;
 
 	@Inject
 	private EntityManager manager;
@@ -62,16 +68,15 @@ public class PedidoDAO implements Serializable {
 
 		Criteria criteria = session.createCriteria(Pedido.class)
 
-			
 				.createAlias("vendedor", "v");
 
 		if (filtro.getIdInicial() != null) {
-			
+
 			criteria.add(Restrictions.ge("id", filtro.getIdInicial()));
 		}
 
 		if (filtro.getIdFinal() != null) {
-			
+
 			criteria.add(Restrictions.le("id", filtro.getIdFinal()));
 		}
 
@@ -84,17 +89,17 @@ public class PedidoDAO implements Serializable {
 		}
 
 		if (filtro.getValorInicial() != null) {
-			
+
 			criteria.add(Restrictions.ge("valorTotal", filtro.getValorInicial()));
 		}
 
 		if (filtro.getValorFinal() != null) {
-			
+
 			criteria.add(Restrictions.le("valorTotal", filtro.getValorFinal()));
 		}
 
 		if (StringUtils.isNotBlank(filtro.getFuncionario())) {
-			
+
 			criteria.add(Restrictions.ilike("v.nome", filtro.getFuncionario(), MatchMode.ANYWHERE));
 
 		}
@@ -132,7 +137,7 @@ public class PedidoDAO implements Serializable {
 		}
 		p.setValorTotal(new BigDecimal(valorT));
 		System.out.println(p.getValorTotal());
-		Funcionario funcionario = manager.find(Funcionario.class, new Long(1));
+		Funcionario funcionario = usuarioSistema.getUsuario();
 		System.out.println(funcionario.getNome());
 		p.setVendedor(funcionario);
 		p.setDataCriacao(new Date());
@@ -283,6 +288,12 @@ public class PedidoDAO implements Serializable {
 		}
 
 		return grande;
+	}
+
+	public Long getPedidoTotalPorFuncionario(Funcionario f) {
+
+		return (Long) manager.createQuery("select count(p.id) from Pedido P where P.vendedor.id = :num")
+				.setParameter("num", f.getId()).getSingleResult();
 	}
 
 }

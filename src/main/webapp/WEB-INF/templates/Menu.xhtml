@@ -12,7 +12,7 @@
 					
 					Início</h:link></li>
 			<li><h:link outcome="Venda.xhtml">
-					<i class="fa  fa-fw fa-cart-plus" />Vendas</h:link></li>
+					<i class="fa  fa-fw fa-cart-plus" />Realizar Pedido</h:link></li>
 
 			<li><h:link outcome="Graficos.xhtml">
 					<i class="fa  fa-fw  fa-bar-chart-o"></i>Gráficos e Relatórios </h:link></li>
@@ -22,8 +22,9 @@
 			<li><h:link outcome="Produtos.xhtml">
 					<i class="fa  fa-fw  fa-cutlery"></i>Produtos</h:link></li>
 
-			<li><h:link>
-					<i class="fa  fa-fw  fa-power-off"></i>Sair</h:link></li>
+			<li><h:outputLink
+					value="#{usuarioLogadoBean.logout}">
+					<i class="fa  fa-fw  fa-power-off"></i>Sair</h:outputLink></li>
 
 
 

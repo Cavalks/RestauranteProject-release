@@ -6,13 +6,30 @@
 	template="/WEB-INF/templates/Layout.xhtml">
 
 	<ui:define name="content">
-		<h1 class="aw-page-title">Title</h1>
+		<h1 class="aw-page-title">Seja bem vindo</h1>
 
 		<h:form id="frm">
 
 			<br />
 
-			<h1>Seja bem vindo</h1>
+
+
+			<br />
+			<p:outputLabel value="Funcionário : "
+				style="font-size: 16px;font-weight: 500;padding: 0px;margin: 0px" />
+			<p:outputLabel value="#{usuarioLogadoBean.nomeUsuario}" />
+			<br />
+			<br />
+			<p:outputLabel value="Ultimo acesso  : "
+				style="font-size: 16px;font-weight: 500;padding: 0px;margin: 0px" />
+			<p:outputLabel />
+			<br />
+			<br />
+			<p:outputLabel value="Pedidos realizado até o momento  : "
+				style="font-size: 16px;font-weight: 500;padding: 0px;margin: 0px" />
+			<p:outputLabel value="#{usuarioLogadoBean.pedidos}" />
+			<br />
+			<br />
 
 		</h:form>
 	</ui:define>
