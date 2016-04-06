@@ -8,11 +8,17 @@
 	<ui:define name="content">
 		<h1 class="aw-page-title">Gráficos</h1>
 
-		<h:form id="frm">
+		<h:form id="frm"
+			rendered="#{graficosBean.renderizavelGraficos==false}">
 
 			<br />
-			<f:event listener="#{graficosBean.carregarCombo}"
-				type="preRenderView" />
+
+			<f:metadata>
+				<f:viewParam name="dummy" />
+				<f:event listener="#{graficosBean.carregarCombo}"
+					type="preRenderView" />
+			</f:metadata>
+
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
@@ -322,6 +328,8 @@
 			</p:panel>
 
 		</h:form>
+		<p:outputLabel value="Nenhum pedido realizado . "
+			rendered="#{graficosBean.renderizavelGraficos==true}" />
 	</ui:define>
 
 </ui:composition>

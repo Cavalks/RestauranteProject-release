@@ -299,4 +299,8 @@ public class GraficosBean implements Serializable {
 		return listafiltradaPedido;
 	}
 
+	public boolean isRenderizavelGraficos() {
+		return pedidoDao.existenciaPedidos();
+	}
+
 }

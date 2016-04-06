@@ -311,4 +311,14 @@ public class PedidoDAO implements Serializable {
 
 	}
 
+	public boolean existenciaPedidos() {
+
+		Long id = (Long) manager.createQuery("select count(p.id) from Pedido P").getSingleResult();
+		System.out.println(id);
+		if (id > 0) {
+			return false;
+		}
+		return true;
+	}
+
 }
