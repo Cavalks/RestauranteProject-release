@@ -1,6 +1,7 @@
 package com.joaofnunes.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ public class Funcionario implements Serializable {
 	private String email;
 	private String senha;
 	private String cpf;
+	private Date ultimoAcesso;
 
 	@Id
 	@GeneratedValue
@@ -55,6 +57,15 @@ public class Funcionario implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	@Column(nullable = true)
+	public Date getUltimoAcesso() {
+		return ultimoAcesso;
+	}
+
+	public void setUltimoAcesso(Date ultimoAcesso) {
+		this.ultimoAcesso = ultimoAcesso;
 	}
 
 	@Override

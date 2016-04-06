@@ -296,4 +296,19 @@ public class PedidoDAO implements Serializable {
 				.setParameter("num", f.getId()).getSingleResult();
 	}
 
+	public String caixaDiaSelecionado(Date d) {
+		if (d != null) {
+
+			BigDecimal num = (BigDecimal) manager
+					.createQuery("select sum(p.valorTotal) from Pedido p where DATE(p.dataCriacao)=:num")
+					.setParameter("num", d).getSingleResult();
+			if (num != null) {
+				return "R$ " + num.toString();
+			}
+
+		}
+		return "Sem registros.";
+
+	}
+
 }

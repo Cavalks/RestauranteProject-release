@@ -2,6 +2,7 @@ package com.joaofnunes.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ViewScoped;
@@ -28,6 +29,12 @@ public class PedidosBean implements Serializable {
 	private Funcionario funcionario;
 
 	private Pedido pedidoSelecionado;
+
+	private boolean pesquisaPedidos = false;
+
+	private boolean fecharCaixa = false;
+
+	private Date dataCaixa = null;
 
 	@Inject
 	private PedidoDAO pedidoDao;
@@ -92,6 +99,50 @@ public class PedidosBean implements Serializable {
 			System.out.println(ip.getNome());
 		}
 
+	}
+
+	public void actionPesquisar() {
+		this.fecharCaixa = false;
+		this.pesquisaPedidos = true;
+	}
+
+	public void actionCaixa() {
+		this.fecharCaixa = true;
+		this.pesquisaPedidos = false;
+	}
+
+	public boolean isFecharCaixa() {
+		return fecharCaixa;
+	}
+
+	public void setFecharCaixa(boolean fecharCaixa) {
+		this.fecharCaixa = fecharCaixa;
+	}
+
+	public boolean isPesquisaPedidos() {
+		return pesquisaPedidos;
+	}
+
+	public void setPesquisaPedidos(boolean pesquisaPedidos) {
+		this.pesquisaPedidos = pesquisaPedidos;
+	}
+
+	public String getValorCaixa() {
+
+		return pedidoDao.caixaDiaSelecionado(dataCaixa);
+
+	}
+
+	public Date getDataCaixa() {
+		return dataCaixa;
+	}
+
+	public void setDataCaixa(Date dataCaixa) {
+		this.dataCaixa = dataCaixa;
+	}
+
+	public void ajaxDataCaixa() {
+		getValorCaixa();
 	}
 
 }

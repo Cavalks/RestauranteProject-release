@@ -20,10 +20,16 @@
 						action="#{graficosBean.actionProdutos}" update="frm" />
 
 					<p:commandButton value="Pedidos"
-						action="#{graficosBean.actionPedidos}" update="frm" immediate="true" />
+						action="#{graficosBean.actionPedidos}" update="frm"
+						immediate="true" />
 				</p:toolbarGroup>
 			</p:toolbar>
 			<br />
+
+			<p:outputLabel value="Selecione uma opção acima . "
+				style="font-size: 20px;font-weight: 500;padding: 0px;margin: 0px"
+				rendered="#{graficosBean.pedidosValidation==false and graficosBean.produtosValidation==false}" />
+
 			<p:panel id="panelPedidos"
 				rendered="#{graficosBean.pedidosValidation}">
 				<h1>Faturamento</h1>

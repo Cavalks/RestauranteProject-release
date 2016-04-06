@@ -10,13 +10,22 @@
 		class="com.joaofnunes.security.AppUserDetailsService" />
 
 
-
+	<http pattern="/Login.xhtml" security="none" />
 	<http pattern="/javax.faces.resource/**" security="none" />
 
 
-	<http auto-config="true" use-expressions="true">
+	<http auto-config="false" use-expressions="true">
 
 		<intercept-url pattern="/**" access="hasAnyRole('ADMINISTRADORES')" />
+		<form-login login-page="/Login.xhtml" default-target-url="/"
+			always-use-default-target="true" authentication-failure-url="/Login.xhtml?invalid=true" />
+		<logout logout-url="/j_spring_security_logout"
+			invalidate-session="true" />
+
+
+
+
+
 	</http>
 
 	<authentication-manager>

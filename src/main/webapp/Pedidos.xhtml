@@ -14,108 +14,140 @@
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
-					<p:commandButton value="Pesquisar" update="@form"
-						action="#{pedidosBean.pesquisarFiltrados}" />
+					<p:commandButton value="Pesquisar Pedidos" update="@form"
+						action="#{pedidosBean.actionPesquisar}" />
+					<p:commandButton value="Fechar caixa" update="@form"
+						action="#{pedidosBean.actionCaixa}" />
 				</p:toolbarGroup>
 
 			</p:toolbar>
-
-			<p:panelGrid columns="2" id="painel"
-				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
-				<p:outputLabel value="Número" />
-				<h:panelGroup>
-					<p:inputText size="10"
-						value="#{pedidosBean.pedidoFilter.idInicial}" />
+			
+			
+				<p:outputLabel value="Selecione uma opção acima . "
+				style="font-size: 20px;font-weight: 500;padding: 0px;margin: 0px"
+				rendered="#{pedidosBean.pesquisaPedidos==false and pedidosBean.fecharCaixa==false}" />
+			<p:panel rendered="#{pedidosBean.pesquisaPedidos}">
+				<p:panelGrid columns="2" id="painel"
+					style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+					<p:outputLabel value="Número" />
+					<h:panelGroup>
+						<p:inputText size="10"
+							value="#{pedidosBean.pedidoFilter.idInicial}" />
 	    			a
 	    			<p:inputText size="10"
-						value="#{pedidosBean.pedidoFilter.idFinal}" />
-				</h:panelGroup>
+							value="#{pedidosBean.pedidoFilter.idFinal}" />
+					</h:panelGroup>
 
-				<p:outputLabel value="Data de criação" />
-				<h:panelGroup>
-					<p:calendar size="10" pattern="dd/MM/yyyy"
-						value="#{pedidosBean.pedidoFilter.dateInicial}" />
+					<p:outputLabel value="Data de criação" />
+					<h:panelGroup>
+						<p:calendar size="10" pattern="dd/MM/yyyy"
+							value="#{pedidosBean.pedidoFilter.dateInicial}" />
 	    			a
 	    			<p:calendar size="10" pattern="dd/MM/yyyy"
-						value="#{pedidosBean.pedidoFilter.dateFinal}" />
-				</h:panelGroup>
+							value="#{pedidosBean.pedidoFilter.dateFinal}" />
+					</h:panelGroup>
 
-				<p:outputLabel value="Funcionário " />
-				<p:autoComplete value="#{pedidosBean.pedidoFilter.funcionario}"
-					completeMethod="#{pedidosBean.lista}" var="f" itemLabel="#{f}"
-					itemValue="#{f}" />
+					<p:outputLabel value="Funcionário " />
+					<p:autoComplete value="#{pedidosBean.pedidoFilter.funcionario}"
+						completeMethod="#{pedidosBean.lista}" var="f" itemLabel="#{f}"
+						itemValue="#{f}" />
 
-				<p:outputLabel value="Valor Total Pedido" />
-				<h:panelGroup>
-					<p:inputText size="10"
-						value="#{pedidosBean.pedidoFilter.valorInicial}" />
+					<p:outputLabel value="Valor Total Pedido" />
+					<h:panelGroup>
+						<p:inputText size="10"
+							value="#{pedidosBean.pedidoFilter.valorInicial}" />
 	    			a
 	    			<p:inputText size="10"
-						value="#{pedidosBean.pedidoFilter.valorFinal}" />
-				</h:panelGroup>
+							value="#{pedidosBean.pedidoFilter.valorFinal}" />
+					</h:panelGroup>
 
-			</p:panelGrid>
+				</p:panelGrid>
+				<p:commandButton value="Pesquisar" update="@form"
+					action="#{pedidosBean.pesquisarFiltrados}" />
+
+
+				<p:dataTable style="margin-top: 20px" id="tablePedido"
+					value="#{pedidosBean.filtrados}" var="p"
+					emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom"
+					lazy="true">
+					<p:column headerText="Número">
+						<h:outputText value="#{p.id}" />
+					</p:column>
+
+					<p:column headerText="Funcionário">
+						<h:outputText value="#{p.vendedor.nome}" />
+					</p:column>
+					<p:column headerText="Data de criação">
+						<h:outputText value="#{p.dataformatada}">
+
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Valor total">
+						<h:outputText value="#{p.valorTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Utilidade">
+						<p:commandButton value="Excluir"
+							oncomplete="PF('DialogExclusao').show()" process="@this"
+							update="@form">
+							<f:setPropertyActionListener value="#{p}"
+								target="#{pedidosBean.pedidoSelecionado}" />
+						</p:commandButton>
+						<p:button value="Editar" outcome="/Venda.xhtml">
+							<f:param name="pedido" value="#{p.id}" />
+						</p:button>
+					</p:column>
+				</p:dataTable>
+
+				<p:dialog widgetVar="DialogExclusao"
+					header="Tem certeza que deseja excluir?" resizable="true"
+					style="min-width: 300px" responsive="true">
+					<h:panelGroup id="itemPanel">
+
+
+						<p:commandButton value="Cancelar" />
+						<p:commandButton value="Confirmar"
+							oncomplete="if (!args.validationFailed) PF('DialogExclusao').hide()"
+							process="itemPanel" update="form:tablePedido"
+							action="#{pedidosBean.excluir}">
+
+
+						</p:commandButton>
+					</h:panelGroup>
+
+
+				</p:dialog>
 
 
 
-			<p:dataTable style="margin-top: 20px" id="tablePedido"
-				value="#{pedidosBean.filtrados}" var="p"
-				emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
-				paginatorAlwaysVisible="false" paginatorPosition="bottom"
-				lazy="true">
-				<p:column headerText="Número">
-					<h:outputText value="#{p.id}" />
-				</p:column>
+			</p:panel>
 
-				<p:column headerText="Funcionário">
-					<h:outputText value="#{p.vendedor.nome}" />
-				</p:column>
-				<p:column headerText="Data de criação">
-					<h:outputText value="#{p.dataformatada}">
+			<p:panel rendered="#{pedidosBean.fecharCaixa}">
+
+
+				<p:outputLabel value="Selecione a data : "
+					style="font-size: 16px;font-weight: 500;padding: 0px;margin: 0px" />
+				<p:calendar value="#{pedidosBean.dataCaixa}">
+					<p:ajax event="dateSelect" listener="#{pedidosBean.ajaxDataCaixa}"
+						update="valorCaixa" />
+				</p:calendar>
+
+
+				<br />
+				<p:outputLabel value="Valor total : "
+					style="font-size: 12px;font-weight: 500;padding: 0px;margin: 0px" />
+				<h:outputLabel id="valorCaixa" value="#{pedidosBean.valorCaixa}">
 					
-					</h:outputText>
-				</p:column>
-				<p:column headerText="Valor total">
-					<h:outputText value="#{p.valorTotal}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="Utilidade">
-					<p:commandButton value="Excluir"
-						oncomplete="PF('DialogExclusao').show()" process="@this"
-						update="@form">
-						<f:setPropertyActionListener value="#{p}"
-							target="#{pedidosBean.pedidoSelecionado}" />
-					</p:commandButton>
-					<p:button value="Editar" outcome="/Venda.xhtml">
-						<f:param name="pedido" value="#{p.id}" />
-					</p:button>
-				</p:column>
-			</p:dataTable>
-
-			<p:dialog widgetVar="DialogExclusao"
-				header="Tem certeza que deseja excluir?" resizable="true"
-				style="min-width: 300px" responsive="true">
-				<h:panelGroup id="itemPanel">
-
-
-					<p:commandButton value="Cancelar" />
-					<p:commandButton value="Confirmar"
-						oncomplete="if (!args.validationFailed) PF('DialogExclusao').hide()"
-						process="itemPanel" update="form:tablePedido"
-						action="#{pedidosBean.excluir}">
-
-
-					</p:commandButton>
-				</h:panelGroup>
-
-
-			</p:dialog>
+				</h:outputLabel>
 
 
 
 
+
+			</p:panel>
 
 		</h:form>
 

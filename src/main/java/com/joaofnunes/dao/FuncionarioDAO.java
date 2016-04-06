@@ -1,6 +1,7 @@
 package com.joaofnunes.dao;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import com.joaofnunes.model.Funcionario;
+import com.joaofnunes.util.jpa.Transactional;
 
 public class FuncionarioDAO implements Serializable {
 
@@ -42,6 +44,12 @@ public class FuncionarioDAO implements Serializable {
 		}
 
 		return funcionario;
+	}
+
+	@Transactional
+	public void updateUltimoAcesso(Funcionario f) {
+		f = porId(f.getId());
+		f.setUltimoAcesso(new Date());
 	}
 
 }
