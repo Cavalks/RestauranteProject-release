@@ -7,6 +7,7 @@
 
 	<ui:define name="content">
 		<h:form id="frm">
+
 			<h1 class="aw-page-title">#{vendasBean.edicao ? "Edição Pedido"
 				: "Novo Pedido"}</h1>
 			<style type="text/css">
@@ -67,9 +68,11 @@
 
 					<p:panelGrid columns="1" layout="grid"
 						styleClass="panelgrid-noborder">
-
 						<p:commandButton value="#{p.nome}" action="#{p.incrementar}"
-							style="width: 210px; height: 120px;" ajax="true" update="@form" />
+							style="width: 210px; height: 120px;" ajax="true" update="@form">
+
+						</p:commandButton>
+
 
 						<p:panelGrid columns="2" styleClass="panelgrid-noborder">
 
@@ -161,6 +164,8 @@
 					<h:inputText required="true"
 						requiredMessage="é necessário informar o codigo da operação." />
 				</p:panelGrid>
+				<br />
+
 				<br />
 				<p:commandButton process="@this" update="@form" value="voltar"
 					rendered="#{vendasBean.condicoesVenda.dinheiro || vendasBean.condicoesVenda.cartao}"

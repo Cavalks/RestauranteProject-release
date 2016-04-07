@@ -3,12 +3,8 @@ package com.joaofnunes.controller;
 import java.text.SimpleDateFormat;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import com.joaofnunes.dao.FuncionarioDAO;
 import com.joaofnunes.dao.PedidoDAO;
@@ -19,52 +15,33 @@ import com.joaofnunes.security.UsuarioSistema;
 @RequestScoped
 public class UsuarioLogadoBean {
 	@Inject
-	PedidoDAO pedidoDao;
+	private PedidoDAO pedidoDao;
 
 	@Inject
-	FuncionarioDAO funcionarioDao;
+	private FuncionarioDAO funcionarioDao;
+
+	@Inject
+	@UsuarioLogado
+	private UsuarioSistema usuarioSistema;
 
 	public String getNomeUsuario() {
-		String nome = null;
 
-		UsuarioSistema usuarioLogado = getUsuarioLogado();
-
-		if (usuarioLogado != null) {
-			nome = usuarioLogado.getUsuario().getNome();
-		}
-
-		return nome;
-	}
-
-	@Produces
-	@UsuarioLogado
-	private UsuarioSistema getUsuarioLogado() {
-		UsuarioSistema usuario = null;
-
-		UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) FacesContext
-				.getCurrentInstance().getExternalContext().getUserPrincipal();
-
-		if (auth != null && auth.getPrincipal() != null) {
-			usuario = (UsuarioSistema) auth.getPrincipal();
-
-		}
-
-		return usuario;
+		return usuarioSistema.getUsuario().getNome();
 	}
 
 	public String getLogout() {
-		funcionarioDao.updateUltimoAcesso(getUsuarioLogado().getUsuario());
+		funcionarioDao.updateUltimoAcesso(usuarioSistema.getUsuario());
 		return "restaurante/j_spring_security_logout";
 	}
 
 	public Long getPedidos() {
 
-		return pedidoDao.getPedidoTotalPorFuncionario(getUsuarioLogado().getUsuario());
+		return pedidoDao.getPedidoTotalPorFuncionario(usuarioSistema.getUsuario());
 	}
 
 	public String getUltimaEntrada() {
 
-		String s = new SimpleDateFormat("dd/MM/yyyy").format(getUsuarioLogado().getUsuario().getUltimoAcesso());
+		String s = new SimpleDateFormat("dd/MM/yyyy").format(usuarioSistema.getUsuario().getUltimoAcesso());
 
 		return s;
 	}

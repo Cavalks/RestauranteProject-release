@@ -321,4 +321,14 @@ public class PedidoDAO implements Serializable {
 		return true;
 	}
 
+	public BigDecimal getPedidosTotalIntervaloData(Date inicio, Date fim) {
+
+		BigDecimal lista = (BigDecimal) manager
+				.createQuery(
+						"select sum(p.valorTotal) from Pedido p where p.dataCriacao between :dateBegin AND :dateEnd")
+				.setParameter("dateBegin", inicio).setParameter("dateEnd", fim).getSingleResult();
+		return lista;
+
+	}
+
 }
