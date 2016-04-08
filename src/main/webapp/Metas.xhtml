@@ -10,7 +10,7 @@
 
 
 
-		<h:form id="frm">
+		<h:form id="frm1">
 
 			<f:metadata>
 				<f:viewParam name="dummy" />
@@ -19,7 +19,8 @@
 
 			<p:toolbar style="margin-top: 20px">
 				<p:toolbarGroup>
-					<p:commandButton value="Criar Meta" />
+					<p:commandButton value="Criar Meta" process="@this"
+						oncomplete="PF('DialogCreate').show()" update="@form" />
 				</p:toolbarGroup>
 
 			</p:toolbar>
@@ -38,15 +39,19 @@
 			<br />
 			<p:outputLabel value="Lista de Metas"
 				rendered="#{metasBean.returnMeta==1||metasBean.returnMeta==2||metasBean.returnMeta==3}" />
-			<p:dataTable value="#{metasBean.metas}" var="m"
+			<p:dataTable value="#{metasBean.metas}" var="m" id="datatable"
 				rendered="#{metasBean.returnMeta==1||metasBean.returnMeta==2||metasBean.returnMeta==3}"
 				emptyMessage="Nenhuma meta encontrada .">
 				<p:column headerText="Data inicial : ">
-					<h:outputLabel value="#{m.dataInicial}" />
+					<h:outputLabel value="#{m.dataInicial}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputLabel>
 				</p:column>
 
 				<p:column headerText="Data final : ">
-					<h:outputLabel value="#{m.dataFinal}" />
+					<h:outputLabel value="#{m.dataFinal}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputLabel>
 				</p:column>
 
 				<p:column headerText="Valor total  : ">
@@ -62,10 +67,10 @@
 				</p:column>
 
 				<p:column headerText=" Utilidade ">
-					<p:commandButton value="Verificar" action="#{metasBean.test}"
-						update="@form">
+					<p:commandButton value="Progresso" process="@this"
+						oncomplete="PF('DialogProgress').show()" update="@form">
 						<f:setPropertyActionListener value="#{m}"
-							target="#{metasBean.metaSelecioada}"></f:setPropertyActionListener>
+							target="#{metasBean.metaSelecioada}" />
 					</p:commandButton>
 				</p:column>
 
@@ -73,13 +78,38 @@
 
 			</p:dataTable>
 			<br />
-			<p:outputLabel value="Progresso"
-				rendered="#{metasBean.mostrarBarra==true and metasBean.returnMeta==1 }" />
-			<br />
-			<p:progressBar value="#{metasBean.metaSelecioada.valorMeta}"
-				labelTemplate="#{metasBean.metaSelecioada.valorMeta}%"
-				displayOnly="true" 	rendered="#{metasBean.mostrarBarra==true and metasBean.returnMeta==1 }" />
+
+
+
+
+			<p:dialog widgetVar="DialogProgress" header="Progresso"
+				closable="true" resizable="true" responsive="true">
+				<p:progressBar value="#{metasBean.metaSelecioada.porcentagemBar}"
+					labelTemplate="#{metasBean.metaSelecioada.porcentagemBar}%"
+					displayOnly="true" />
+			</p:dialog>
+
+			<p:dialog widgetVar="DialogCreate" header="Progresso" closable="true"
+				resizable="true" responsive="true">
+				<p:messages closable="true" />
+				<p:panelGrid columns="2" id="panel">
+
+					<p:outputLabel value="Data Inicio : " />
+					<p:calendar value="#{metasBean.novaMeta.dataInicial}" required="true" />
+					<p:outputLabel value="Data Final : " />
+					<p:calendar value="#{metasBean.novaMeta.dataFinal}" />
+					<p:outputLabel value="Valor total : " />
+					<h:inputText value="#{metasBean.novaMeta.valorMeta}" />
+					<p:commandButton value="Gravar" action="#{metasBean.gravar}"
+						process="@this panel" update="@form datatable" />
+				</p:panelGrid>
+
+
+			</p:dialog>
+
 		</h:form>
+
+
 	</ui:define>
 
 </ui:composition>

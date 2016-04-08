@@ -13,7 +13,6 @@ import javax.persistence.Persistence;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Session;
 
-import com.joaofnunes.model.Funcionario;
 import com.joaofnunes.model.Meta;
 import com.joaofnunes.model.Status;
 

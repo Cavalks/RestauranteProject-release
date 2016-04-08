@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 
 import com.joaofnunes.model.Meta;
 import com.joaofnunes.model.Status;
+import com.joaofnunes.security.UsuarioLogado;
+import com.joaofnunes.security.UsuarioSistema;
 import com.joaofnunes.util.jpa.Transactional;
 
 public class MetaDAO implements Serializable {
@@ -20,6 +22,10 @@ public class MetaDAO implements Serializable {
 
 	@Inject
 	private EntityManager manager;
+
+	@Inject
+	@UsuarioLogado
+	UsuarioSistema usuarioSistema;
 
 	public List<Meta> getMetas() {
 
@@ -55,15 +61,22 @@ public class MetaDAO implements Serializable {
 		meta.setStatusMeta(Status.FALHA);
 		return meta;
 	}
-	
+
 	@Transactional
-	public Meta updateAndamentoValue(Meta m , BigDecimal value) {
+	public Meta updateAndamentoValue(Meta m, BigDecimal value) {
 		Meta meta = manager.find(Meta.class, m.getId());
 		meta = manager.merge(meta);
 		meta.setValorAndamentoMeta(value);
 		return meta;
 	}
-	
-	
+
+	@Transactional
+	public Meta gravar(Meta m) {
+		Meta meta = m;
+		meta = manager.merge(meta);
+		
+
+		return meta;
+	}
 
 }

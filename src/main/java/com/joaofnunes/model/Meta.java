@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -99,6 +100,25 @@ public class Meta {
 
 	public void setValorAndamentoMeta(BigDecimal valorAndamentoMeta) {
 		this.valorAndamentoMeta = valorAndamentoMeta;
+	}
+
+	@Transient
+	public int getPorcentagemBar() {
+		int resultt = 0;
+
+		if (valorAndamentoMeta != null & valorMeta != null) {
+			double result = (100 * valorAndamentoMeta.doubleValue()) / valorMeta.doubleValue();
+			resultt = (int) result;
+		}
+		return resultt;
+
+	}
+
+	@Override
+	public String toString() {
+		return "Meta [id=" + id + ", valorMeta=" + valorMeta + ", valorAndamentoMeta=" + valorAndamentoMeta
+				+ ", dataInicial=" + dataInicial + ", dataFinal=" + dataFinal + ", funcionario=" + funcionario.getNome()
+				+ ", statusMeta=" + statusMeta + "]";
 	}
 
 }

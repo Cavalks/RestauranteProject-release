@@ -32,7 +32,6 @@ public class GraficosBean implements Serializable {
 	@Inject
 	private ProdutoDAO produtoDao;
 	List<Pedidos> listafiltradaPedido = new ArrayList<>();
-
 	@Inject
 	private GraficLine line;
 	private Integer resultadoListaPedidos;
