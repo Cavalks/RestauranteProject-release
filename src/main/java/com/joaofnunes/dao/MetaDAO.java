@@ -74,6 +74,7 @@ public class MetaDAO implements Serializable {
 	public Meta gravar(Meta m) {
 		Meta meta = m;
 		meta = manager.merge(meta);
+		meta.setValorAndamentoMeta(new BigDecimal(0));
 		
 
 		return meta;

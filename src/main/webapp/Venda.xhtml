@@ -116,14 +116,18 @@
 					</p:column>
 
 					<p:column headerText="Valor Total">
-						<h:outputText value="#{p.valorTotal}" />
+						<h:outputText value="#{p.valorTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
 					</p:column>
 
 
 				</p:dataTable>
 				<br />
-				<p:outputLabel
-					value="Valor total do pedido : #{vendasBean.pedidoTotal}" />
+				<p:outputLabel value="Valor total do pedido : " />
+				<h:outputText value="#{vendasBean.pedidoTotal}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
 				<br />
 				<p:commandButton update="@form" value="voltar"
 					action="#{vendasBean.etapa1}" />
@@ -140,7 +144,11 @@
 			</p:panel>
 
 			<p:panel rendered="#{vendasBean.condicoesVenda.etapa3 == true}">
-				<h1>Valor total do pedido : #{vendasBean.pedidoTotal}</h1>
+
+				<p:outputLabel value="Valor total do pedido : " />
+				<h:outputText value="#{vendasBean.pedidoTotal}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
 				<br />
 				<p:outputLabel value="Forma de Pagamento" />
 				<br />
@@ -180,13 +188,19 @@
 				<h1>#{vendasBean.edicao ? "Pedido editado com sucesso!" :
 					"Pedido salvo com sucesso!"}</h1>
 				<br />
-				<p:outputLabel value="Troco :  #{vendasBean.troco}"
+				<p:outputLabel value="Troco :  "
 					rendered="#{vendasBean.condicoesVenda.dinheiro}" />
+				<h:outputText value="#{vendasBean.troco}"
+					rendered="#{vendasBean.condicoesVenda.dinheiro}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Número do pedido " />
 					<p:outputLabel value="#{vendasBean.pedido.id}" />
 					<p:outputLabel value="Valor Total :  " />
-					<p:outputLabel value="#{vendasBean.pedido.valorTotal}" />
+					<h:outputLabel value="#{vendasBean.pedido.valorTotal}">
+						<f:convertNumber type="currency" />
+					</h:outputLabel>
 					<p:outputLabel value="Funcionário(a)  :  " />
 					<p:outputLabel value="#{vendasBean.pedido.vendedor.nome}" />
 				</p:panelGrid>

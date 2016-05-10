@@ -5,18 +5,37 @@ import java.io.Serializable;
 import com.joaofnunes.model.FormaPagamento;
 import com.joaofnunes.model.Pedido;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class CondicoesVenda implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@Getter
+	@Setter
 	private boolean etapa1;
+	@Getter
+	@Setter
 	private boolean etapa2;
+	@Getter
+	@Setter
 	private boolean etapa3;
+	@Getter
+	@Setter
 	private boolean etapa4;
+	@Getter
+	@Setter
 	private boolean dinheiro;
+	@Getter
+	@Setter
 	private boolean cartao;
+	@Getter
+	@Setter
 	private Integer returnPagamento;
+	@Getter
+	@Setter
 	private int index;
 
 	public CondicoesVenda() {
@@ -28,7 +47,7 @@ public class CondicoesVenda implements Serializable {
 		this.etapa2 = false;
 		this.etapa3 = false;
 		this.etapa4 = false;
-		
+
 		if (etapaSelecionada == 1) {
 			this.etapa1 = true;
 			this.index = 0;
@@ -68,71 +87,5 @@ public class CondicoesVenda implements Serializable {
 			this.cartao = false;
 		}
 	}
-
-	public boolean isEtapa1() {
-		return etapa1;
-	}
-
-	public void setEtapa1(boolean etapa1) {
-		this.etapa1 = etapa1;
-	}
-
-	public boolean isEtapa2() {
-		return etapa2;
-	}
-
-	public void setEtapa2(boolean etapa2) {
-		this.etapa2 = etapa2;
-	}
-
-	public boolean isEtapa3() {
-		return etapa3;
-	}
-
-	public void setEtapa3(boolean etapa3) {
-		this.etapa3 = etapa3;
-	}
-
-	public boolean isEtapa4() {
-		return etapa4;
-	}
-
-	public void setEtapa4(boolean etapa4) {
-		this.etapa4 = etapa4;
-	}
-
-	public boolean isDinheiro() {
-		return dinheiro;
-	}
-
-	public void setDinheiro(boolean dinheiro) {
-		this.dinheiro = dinheiro;
-	}
-
-	public boolean isCartao() {
-		return cartao;
-	}
-
-	public void setCartao(boolean cartao) {
-		this.cartao = cartao;
-	}
-
-	public Integer getReturnPagamento() {
-		return returnPagamento;
-	}
-
-	public void setReturnPagamento(Integer returnPagamento) {
-		this.returnPagamento = returnPagamento;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-	
-	
 
 }

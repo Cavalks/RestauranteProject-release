@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.joaofnunes.util.jsf.FacesUtil;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Named
 @SessionScoped
 public class LoginBean implements Serializable {
@@ -29,13 +32,15 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private HttpServletResponse response;
-
+	@Getter
+	@Setter
 	private String email;
 
 	public void preRender(ComponentSystemEvent e) {
 		if ("true".equals(request.getParameter("invalid"))) {
 			FacesUtil.addErrorMessage("Usuário ou senha inválido!");
 		}
+
 	}
 
 	public void login() throws ServletException, IOException {
@@ -43,14 +48,6 @@ public class LoginBean implements Serializable {
 		dispatcher.forward(request, response);
 
 		facesContext.responseComplete();
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 }

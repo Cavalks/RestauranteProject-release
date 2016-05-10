@@ -34,7 +34,7 @@ public class Produto implements Serializable {
 		this.id = id;
 	}
 
-	@NotBlank
+	@NotBlank(message="Descrição : precisa ser informada.")
 	@Size(max = 80)
 	@Column(nullable = false, length = 80)
 	public String getNome() {

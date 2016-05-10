@@ -39,7 +39,7 @@ public class Meta {
 		this.id = id;
 	}
 
-	@NotNull
+	@NotNull(message="Valor Meta : Precisa ser preenchido .")
 	@Column(name = "valor_meta", nullable = false, precision = 10, scale = 2)
 	public BigDecimal getValorMeta() {
 		return valorMeta;
@@ -49,7 +49,7 @@ public class Meta {
 		this.valorMeta = valorMeta;
 	}
 
-	@NotNull
+	@NotNull(message="Data inicial  : Precisa ser preenchida .")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_inicial", nullable = false)
 	public Date getDataInicial() {
@@ -60,7 +60,7 @@ public class Meta {
 		this.dataInicial = dataInicial;
 	}
 
-	@NotNull
+	@NotNull(message="Data final : Precisa ser preenchida .")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_final", nullable = false)
 	public Date getDataFinal() {

@@ -26,7 +26,7 @@
 			</p:toolbar>
 			<br />
 			<p:outputLabel value="Escolha uma opção : " />
-			<p:selectOneRadio value="#{metasBean.returnMeta}">
+			<p:selectOneRadio value="#{metasBean.returnMeta}" id="radio">
 				<f:selectItem itemLabel="Em andamento" itemValue="1" />
 				<f:selectItem itemLabel="Exito" itemValue="2" />
 				<f:selectItem itemLabel="Falha" itemValue="3" />
@@ -90,20 +90,24 @@
 			</p:dialog>
 
 			<p:dialog widgetVar="DialogCreate" header="Progresso" closable="true"
-				resizable="true" responsive="true">
-				<p:messages closable="true" />
-				<p:panelGrid columns="2" id="panel">
+				responsive="true">
+				<h:panelGroup id="itemPanel2">
+					<p:messages closable="true" id="msg" />
+					<p:panelGrid columns="2" id="panel">
 
-					<p:outputLabel value="Data Inicio : " />
-					<p:calendar value="#{metasBean.novaMeta.dataInicial}" required="true" />
-					<p:outputLabel value="Data Final : " />
-					<p:calendar value="#{metasBean.novaMeta.dataFinal}" />
-					<p:outputLabel value="Valor total : " />
-					<h:inputText value="#{metasBean.novaMeta.valorMeta}" />
-					<p:commandButton value="Gravar" action="#{metasBean.gravar}"
-						process="@this panel" update="@form datatable" />
-				</p:panelGrid>
+						<p:outputLabel value="Data Inicio : " />
+						<p:calendar value="#{metasBean.novaMeta.dataInicial}" />
+						<p:outputLabel value="Data Final : " />
+						<p:calendar value="#{metasBean.novaMeta.dataFinal}" />
+						<p:outputLabel value="Valor total : " />
+						<h:inputText value="#{metasBean.novaMeta.valorMeta}" />
+						<p:commandButton value="Gravar" action="#{metasBean.gravar}"
+							oncomplete="if (!args.validationFailed) PF('DialogCreate').hide()"
+							update="frm1:itemPanel2 msg  " process="itemPanel2 msg @this " />
 
+
+					</p:panelGrid>
+				</h:panelGroup>
 
 			</p:dialog>
 

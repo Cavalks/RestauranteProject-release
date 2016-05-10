@@ -147,6 +147,7 @@ public class MetasBean implements Serializable {
 		metaDao.gravar(novaMeta);
 		updateAndamentos();
 		validarMetas();
+		novaMeta = new Meta();
 
 	}
 

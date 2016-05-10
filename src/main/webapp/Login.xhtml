@@ -18,7 +18,9 @@
 		<f:viewParam name="dummy" />
 		<f:event listener="#{loginBean.preRender}" type="preRenderView" />
 	</f:metadata>
-
+	<div>
+		<h:outputLabel value="Texto" style="horizontal-align:center" />
+	</div>
 	<div id="login-dialog">
 		<p:outputLabel value="Login"
 			style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
@@ -27,7 +29,8 @@
 
 			<p:messages id="messages" autoUpdate="true" closable="true" />
 
-			<h:panelGrid columns="2" styleClass="grid-login" style="background-color:#00BFFF;">
+			<h:panelGrid columns="2" styleClass="grid-login"
+				style="background-color:#00BFFF;">
 				<p:outputLabel value="E-mail" />
 				<p:inputText size="30" id="j_username" value="#{loginBean.email}" />
 

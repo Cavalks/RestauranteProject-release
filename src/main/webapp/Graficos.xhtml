@@ -64,15 +64,22 @@
 					</p:column>
 
 					<p:column headerText="Valor total : ">
-						<p:outputLabel value="#{p.valorTotal}" />
+						<h:outputLabel value="#{p.valorTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputLabel>
 					</p:column>
 
 					<p:column headerText="Custo total : ">
-						<p:outputLabel value="#{p.custoTotal}" />
+						<h:outputLabel value="#{p.custoTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputLabel>
+
 					</p:column>
 
 					<p:column headerText="Lucro : ">
-						<p:outputLabel value="#{p.lucro}" />
+						<h:outputLabel value="#{p.lucro}">
+							<f:convertNumber type="currency" />
+						</h:outputLabel>
 					</p:column>
 				</p:dataTable>
 
@@ -89,7 +96,7 @@
 					style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
 				<h:outputLabel value="#{graficosBean.gastoTotalPedidos}"
 					rendered="#{graficosBean.resultadoListaPedidos ==1 ||graficosBean.resultadoListaPedidos ==2 ||graficosBean.resultadoListaPedidos ==3||graficosBean.resultadoListaPedidos ==4}">
-
+					<f:convertNumber type="currency" />
 				</h:outputLabel>
 
 
@@ -123,15 +130,22 @@
 							</p:column>
 
 							<p:column headerText="Custo">
-								<p:outputLabel value="#{p.custo}" />
+								<h:outputLabel value="#{p.custo}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
+
 							</p:column>
 
 							<p:column headerText="Valor Unitário">
-								<p:outputLabel value="#{p.valorUnitario}" />
+								<h:outputLabel value="#{p.valorUnitario}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
 							</p:column>
 
 							<p:column headerText="Lucro">
-								<p:outputLabel value="#{p.lucro}" />
+								<h:outputLabel value="#{p.lucro}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
 							</p:column>
 
 							<p:column headerText="%">
@@ -149,7 +163,7 @@
 						<p:outputLabel value="Custo Total  : "
 							style="font-size: 24px;font-weight: 500;padding: 0px;margin: 0px" />
 						<h:outputLabel value="#{graficosBean.gastoTotalProdutos}">
-
+							<f:convertNumber type="currency" />
 						</h:outputLabel>
 
 
@@ -189,15 +203,21 @@
 								</p:column>
 
 								<p:column headerText="Custo">
-									<p:outputLabel value="#{p.custo}" />
+									<h:outputLabel value="#{p.custo}">
+										<f:convertNumber type="currency" />
+									</h:outputLabel>
 								</p:column>
 
 								<p:column headerText="Valor Unitário">
-									<p:outputLabel value="#{p.valorUnitario}" />
+									<h:outputLabel value="#{p.valorUnitario}">
+										<f:convertNumber type="currency" />
+									</h:outputLabel>
 								</p:column>
 
 								<p:column headerText="Lucro">
-									<p:outputLabel value="#{p.lucro}" />
+									<h:outputLabel value="#{p.lucro}">
+										<f:convertNumber type="currency" />
+									</h:outputLabel>
 								</p:column>
 
 								<p:column headerText="%">
@@ -222,7 +242,7 @@
 							<h:outputLabel
 								value="#{graficosBean.gastoTotalProdutosPorPeriodo}"
 								rendered="#{graficosBean.resultadoListaProdutos ==1 ||graficosBean.resultadoListaProdutos ==2 ||graficosBean.resultadoListaProdutos ==3||graficosBean.resultadoListaProdutos ==4}">
-
+								<f:convertNumber type="currency" />
 							</h:outputLabel>
 
 
@@ -272,15 +292,21 @@
 							</p:column>
 
 							<p:column headerText="Custo">
-								<p:outputLabel value="#{p.custo}" />
+								<h:outputLabel value="#{p.custo}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
 							</p:column>
 
 							<p:column headerText="Valor Unitário">
-								<p:outputLabel value="#{p.valorUnitario}" />
+								<h:outputLabel value="#{p.valorUnitario}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
 							</p:column>
 
 							<p:column headerText="Lucro">
-								<p:outputLabel value="#{p.lucro}" />
+								<h:outputLabel value="#{p.lucro}">
+									<f:convertNumber type="currency" />
+								</h:outputLabel>
 							</p:column>
 
 							<p:column headerText="Data">
@@ -305,7 +331,7 @@
 							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}" />
 						<h:outputLabel value="#{graficosBean.custoProdutoUnico}"
 							rendered="#{graficosBean.resultadoComboBox ==1 ||graficosBean.resultadoComboBox ==2 ||graficosBean.resultadoComboBox ==3||graficosBean.resultadoComboBox ==4}">
-
+							<f:convertNumber type="currency" />
 						</h:outputLabel>
 
 
